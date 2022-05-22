@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.NewChat">
+
+    <EditText
+        android:id="@+id/editTxtNewChatroomTitle"
+        android:layout_width="316dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="42dp"
+        android:ems="10"
+        android:hint="Chat Name"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="70dp" />
+
+    <Spinner
+        android:id="@+id/chatTypesSpinner"
+        android:layout_width="316dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="24dp"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTxtNewChatroomTitle"
+        style="@style/Base.Widget.AppCompat.Spinner.Underlined"/>
+
+    <EditText
+        android:id="@+id/editTxtNewChatroomDescr"
+        android:layout_width="307dp"
+        android:layout_height="84dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Description..."
+        android:inputType="textPersonName"
+        app:layout_constraintTop_toBottomOf="@+id/chatTypesSpinner"
+        tools:layout_editor_absoluteX="42dp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

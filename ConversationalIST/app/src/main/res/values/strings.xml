@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ConversationalIST</string>
+    <string-array name="chatroom_types">
+        <item>Chat type…</item>
+        <item>Public</item>
+        <item>Private</item>
+        <item>Geo-founder</item>
+    </string-array>
+</resources>
