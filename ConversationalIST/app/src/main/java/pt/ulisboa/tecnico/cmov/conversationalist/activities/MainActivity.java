@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
@@ -21,10 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
+import pt.ulisboa.tecnico.cmov.conversationalist.UserAccount;
 import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatRoomListAdapter;
 import pt.ulisboa.tecnico.cmov.conversationalist.chatroom.ChatRoom;
 
 public class MainActivity extends AppCompatActivity {
+
+    UserAccount user;
 
     private AlertDialog dialog;
     private AlertDialog.Builder dialogBuilder;
@@ -37,8 +41,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getUserInfo();
+
         configNewChatButton();
         displayChatList();
+    }
+
+    public void getUserInfo() {
+        TextView helloUser = findViewById(R.id.helloUser);
+        if(getIntent().getExtras() != null) {
+            user = (UserAccount) getIntent().getSerializableExtra("user");
+            helloUser.setText("Ahoy " + user.getName());
+        }
+        else
+            helloUser.setText("Ahoy user");
     }
 
     public void configNewChatButton(){
@@ -53,8 +69,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void displayChatList() {
         ListView chatsListView = findViewById(R.id.chatRoom_List);
+        TextView noChatsMsg =  findViewById(R.id.EmptyChatListMsg);
         ChatRoomListAdapter chatListAdapter = new ChatRoomListAdapter(this, R.layout.chatlist_row_item, availableChats);
         chatsListView.setAdapter(chatListAdapter);
+        chatsListView.setEmptyView(noChatsMsg);
     }
 
 //  ##########################
@@ -91,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //create button
+        //create button (talvez mudar de positiveButton para button normal)
         dialogBuilder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -99,15 +117,14 @@ public class MainActivity extends AppCompatActivity {
                 if(name.matches("")) {
                     input_name.setError("Chat name is required");
                     Log.i("error", input_name.getText().toString());
+                    return;
                 }
 
                 else if (!newChatTypesSpinner.getSelectedItem().toString().equalsIgnoreCase("Chat type…")) {
-
                         ChatRoom new_chatRoom = new ChatRoom(name, chatroom_type[0], description.getText().toString());
                         availableChats.add(new_chatRoom);
                         dialogInterface.dismiss();
                         displayChatList();
-
                 }
             }
         });

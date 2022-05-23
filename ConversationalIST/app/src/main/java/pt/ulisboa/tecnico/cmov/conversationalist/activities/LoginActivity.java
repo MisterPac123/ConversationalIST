@@ -10,8 +10,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
+import pt.ulisboa.tecnico.cmov.conversationalist.UserAccount;
 
 public class LoginActivity extends AppCompatActivity {
+
+    UserAccount user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +32,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(verifyLogin()){
-                    switchActivitiesWithData();
-                    //get user data
-
+                    startMainActivity();
                 }
             }
         });
@@ -41,10 +42,10 @@ public class LoginActivity extends AppCompatActivity {
         EditText usernameEditTxt = findViewById(R.id.usernameEditText);
         EditText passwordEditTxt = findViewById(R.id.passwordEditText);
 
-        String name = usernameEditTxt.getText().toString();
+        String username = usernameEditTxt.getText().toString();
         String password = passwordEditTxt.getText().toString();
 
-        if(name.matches("")) {
+        if(username.matches("")) {
             usernameEditTxt.setError("Username Required");
             return false;
         }
@@ -53,13 +54,17 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         }
         //check if user in database
+        //get user from database
+        //(for now just create user)
+        user = new UserAccount(username, "random@email.com", password, "random name");
         return true;
     }
 
-    private void switchActivitiesWithData() {
+    private void startMainActivity() {
         Intent switchActivityIntent = new Intent(this, MainActivity.class);
-        switchActivityIntent.putExtra("message", "From: " + LoginActivity.class.getSimpleName());
+        switchActivityIntent.putExtra("user", user);
         startActivity(switchActivityIntent);
+
     }
 
     public void configSignupButton() {
@@ -67,11 +72,9 @@ public class LoginActivity extends AppCompatActivity {
         TextView signClickableTxt = (TextView) this.findViewById(R.id.createAccountTxt);
         Intent switchActivityIntent = new Intent(this, SignupActivity.class);
 
-
         signClickableTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchActivityIntent.putExtra("message", "From: " + LoginActivity.class.getSimpleName());
                 startActivity(switchActivityIntent);
             }
 

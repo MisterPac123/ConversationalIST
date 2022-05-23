@@ -9,8 +9,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
+import pt.ulisboa.tecnico.cmov.conversationalist.UserAccount;
 
 public class SignupActivity extends AppCompatActivity {
+    UserAccount user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +29,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(verifySign()){
-                    switchActivitiesWithData();
-                    //get user data
-
+                    startSignupActivity();
                 }
             }
         });
@@ -40,10 +40,12 @@ public class SignupActivity extends AppCompatActivity {
         EditText emailEditTxt = findViewById(R.id.signEmailEditText);
         EditText usernameEditTxt = findViewById(R.id.signUsernameEditText);
         EditText passwordEditTxt = findViewById(R.id.signPasswordEditText);
+        EditText nameEditTxt = findViewById(R.id.signNameEditText);
 
         String email = emailEditTxt.getText().toString();
-        String name = usernameEditTxt.getText().toString();
+        String username = usernameEditTxt.getText().toString();
         String password = passwordEditTxt.getText().toString();
+        String name = nameEditTxt.getText().toString();
 
         if(email.matches("")) {
             emailEditTxt.setError("Email Required");
@@ -51,20 +53,26 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         if(name.matches("")) {
-            usernameEditTxt.setError("Username Required");
+            nameEditTxt.setError("Name Required");
             return false;
         }
         if(password.matches("")) {
             passwordEditTxt.setError("Password required");
             return false;
         }
+        if(username.matches("")) {
+            usernameEditTxt.setError("Username Required");
+            return false;
+        }
         //check if username unique
+        //check if email already exists in db
+        user = new UserAccount(username, email, password, name);
         return true;
     }
 
-    private void switchActivitiesWithData() {
+    private void startSignupActivity() {
         Intent switchActivityIntent = new Intent(this, MainActivity.class);
-        switchActivityIntent.putExtra("message", "From: " + SignupActivity.class.getSimpleName());
+        switchActivityIntent.putExtra("user", user);
         startActivity(switchActivityIntent);
     }
 }
