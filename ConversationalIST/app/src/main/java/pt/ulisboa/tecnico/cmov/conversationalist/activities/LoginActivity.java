@@ -22,9 +22,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         configLoginButton();
         configSignupButton();
-
-
-    }
+   }
 
     public void configLoginButton(){
         Button newChat_Button = (Button) findViewById(R.id.loginButton);
