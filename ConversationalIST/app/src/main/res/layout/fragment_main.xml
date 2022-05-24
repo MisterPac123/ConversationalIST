@@ -4,21 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activities.MainActivity">
+    tools:context=".fragments.MainFragment">
 
     <TextView
-        android:id="@+id/secondFragment"
+        android:id="@+id/helloUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Data Structures"
-        android:textColor="#43a047"
-        android:textSize="40sp"
-        android:textStyle="italic|bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:text="Ahoy"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Chats"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/helloUser"
+        app:layout_constraintTop_toBottomOf="@+id/helloUser" />
 
     <Button
         android:id="@+id/newChat"

@@ -3,6 +3,8 @@ package pt.ulisboa.tecnico.cmov.conversationalist.activities;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.fragment.app.Fragment;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
