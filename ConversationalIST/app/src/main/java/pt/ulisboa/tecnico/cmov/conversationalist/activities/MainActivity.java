@@ -3,8 +3,6 @@ package pt.ulisboa.tecnico.cmov.conversationalist.activities;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import androidx.fragment.app.Fragment;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -13,7 +11,7 @@ import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.fragments.MainFragment;
 import pt.ulisboa.tecnico.cmov.conversationalist.fragments.ProfileFragment;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity  implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     BottomNavigationView bottomNavigationView;
 
@@ -36,11 +34,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         switch (item.getItemId()) {
             case R.id.person:
-                getSupportFragmentManager().beginTransaction().replace(R.id.bottomNavigationView, firstFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.mainScreenFragm, firstFragment).commit();
                 return true;
 
             case R.id.home:
-                getSupportFragmentManager().beginTransaction().replace(R.id.bottomNavigationView, secondFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.mainScreenFragm, secondFragment).commit();
                 return true;
         }
 
