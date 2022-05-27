@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.conversationalist.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -73,7 +74,19 @@ public class MainActivity extends AppCompatActivity {
         ChatRoomListAdapter chatListAdapter = new ChatRoomListAdapter(this, R.layout.chatlist_row_item, availableChats);
         chatsListView.setAdapter(chatListAdapter);
         chatsListView.setEmptyView(noChatsMsg);
-    }
+        chatsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                 @Override
+                                                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                                                     ChatRoom item = availableChats.get(position);
+
+                                                     Intent intent = new Intent(MainActivity.this, ChatRoomActivity.class);
+                                                     //based on item add info to intent
+                                                     startActivity(intent);
+                                                 }
+                                             }
+
+           );
+        }
 
 //  ##########################
 //  ### new chatroom PopUp ###
