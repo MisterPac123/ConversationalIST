@@ -11,20 +11,20 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
-import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatRoomListAdapter;
+import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatRoomListAdp;
 import pt.ulisboa.tecnico.cmov.conversationalist.chatroom.ChatRoom;
+import pt.ulisboa.tecnico.cmov.conversationalist.chatroom.ChatRoomTypes;
 
 public class MainFragment extends Fragment {
 
@@ -36,21 +36,23 @@ public class MainFragment extends Fragment {
     public MainFragment(){
         // require a empty public constructor
     }
+    @Nullable
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_main, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        ChatRoom chat1 = new ChatRoom("name", "Public", "desc");
+        availableChats.add(chat1);
+
+        ChatRoomListAdp chatListAdp = new ChatRoomListAdp(availableChats);
 
         getUserInfo(view);
-        configNewChatButton(view);
-        displayChatList(view);
+        displayChatList(view, chatListAdp);
+        configNewChatButton(view, chatListAdp);
 
+        return view;
     }
 
     public void getUserInfo(View view) {
@@ -64,22 +66,29 @@ public class MainFragment extends Fragment {
             helloUser.setText("Ahoy user");
     }
 
-    public void configNewChatButton(View view){
+    public void configNewChatButton(View view, ChatRoomListAdp chatListAdp){
         Button newChat_Button = (Button) view.findViewById(R.id.newChat);
         newChat_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createNewChatDialog(view);
+                createNewChatDialog(view, chatListAdp);
             }
         });
     }
 
-    public void displayChatList(View view) {
-        ListView chatsListView = view.findViewById(R.id.chatRoom_List);
-        TextView noChatsMsg =  view.findViewById(R.id.EmptyChatListMsg);
-        ChatRoomListAdapter chatListAdapter = new ChatRoomListAdapter(getContext(), R.layout.chatlist_row_item, availableChats);
-        chatsListView.setAdapter(chatListAdapter);
-        chatsListView.setEmptyView(noChatsMsg);
+    public void displayChatList(View view, ChatRoomListAdp chatListAdp ) {
+
+        RecyclerView chatsListView = view.findViewById(R.id.chatRoom_List);
+        Log.i("ChatListView", chatsListView.toString());
+
+        Log.i("chats:", String.valueOf(availableChats.size()));
+        chatsListView.setAdapter(chatListAdp);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        chatsListView.setLayoutManager(linearLayoutManager);
+        //MainActivity main = (MainActivity) getActivity();
+        //ChatRoomListAdapter chatListAdapter = new ChatRoomListAdapter(main, R.layout.chatlist_row_item, availableChats);
+        //chatsListView.setAdapter(chatListAdapter);
+        //chatsListView.setEmptyView(noChatsMsg);
     }
 
 
@@ -87,7 +96,7 @@ public class MainFragment extends Fragment {
 //  ### new chatroom PopUp ###
 //  ##########################
 
-    public void createNewChatDialog(View view){
+    public void createNewChatDialog(View view, ChatRoomListAdp chatListAdp){
         EditText input_name;
         EditText description;
         final String[] chatroom_type = new String[1];
@@ -122,9 +131,9 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String name = input_name.getText().toString();
+                Log.i("create chat", "estou no criar chat (early) " + availableChats.size());
                 if(name.matches("")) {
                     input_name.setError("Chat name is required");
-                    Log.i("error", input_name.getText().toString());
                     return;
                 }
 
@@ -132,7 +141,9 @@ public class MainFragment extends Fragment {
                     ChatRoom new_chatRoom = new ChatRoom(name, chatroom_type[0], description.getText().toString());
                     availableChats.add(new_chatRoom);
                     dialogInterface.dismiss();
-                    displayChatList(view);
+                    Log.i("create chat", "estou no criar chat " + availableChats.size());
+                    //chatListAdp.notifyItemInserted(availableChats.size()-1);
+                    displayChatList(view, chatListAdp);
                 }
             }
         });

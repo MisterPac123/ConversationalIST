@@ -5,6 +5,9 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
@@ -25,9 +28,19 @@ public class MainActivity extends AppCompatActivity  implements BottomNavigation
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.person);
 
+        MainFragment firstFragment = new MainFragment();
+
+        //FragmentManager fragmentManager = getSupportFragmentManager();
+        //FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        //fragmentTransaction.add(R.id.mainScreenFragm, firstFragment);
+        //fragmentTransaction.commit();
+
     }
+
     MainFragment firstFragment = new MainFragment();
     ProfileFragment secondFragment = new ProfileFragment();
+
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
