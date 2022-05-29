@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.cmov.conversationalist.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,16 +15,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
-import pt.ulisboa.tecnico.cmov.conversationalist.UserAccount;
+import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
 import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatRoomListAdapter;
-import pt.ulisboa.tecnico.cmov.conversationalist.chatroom.ChatRoom;
+import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoom;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -75,18 +71,21 @@ public class MainActivity extends AppCompatActivity {
         chatsListView.setAdapter(chatListAdapter);
         chatsListView.setEmptyView(noChatsMsg);
         chatsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                                 @Override
-                                                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                                                     ChatRoom item = availableChats.get(position);
+             @Override
+             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                 ChatRoom item = availableChats.get(position);
+                 openChatRoom(item);
 
-                                                     Intent intent = new Intent(MainActivity.this, ChatRoomActivity.class);
-                                                     //based on item add info to intent
-                                                     startActivity(intent);
-                                                 }
-                                             }
+             }
+        });
+    }
 
-           );
-        }
+    public void openChatRoom(ChatRoom chat) {
+        Intent intent = new Intent(MainActivity.this, ChatRoomActivity.class);
+        intent.putExtra("user", user);
+        intent.putExtra("chat", chat);
+        startActivity(intent);
+    }
 
 //  ##########################
 //  ### new chatroom PopUp ###

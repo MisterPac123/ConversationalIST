@@ -1,7 +1,5 @@
 package pt.ulisboa.tecnico.cmov.conversationalist.adapters;
 
-import android.app.Activity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -16,8 +14,8 @@ import java.util.ArrayList;
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.activities.ChatRoomActivity;
 import pt.ulisboa.tecnico.cmov.conversationalist.activities.MainActivity;
-import pt.ulisboa.tecnico.cmov.conversationalist.chatroom.ChatRoom;
-import pt.ulisboa.tecnico.cmov.conversationalist.chatroom.ChatRoomTypes;
+import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoom;
+import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoomTypes;
 
 public class ChatRoomListAdapter extends ArrayAdapter<ChatRoom> {
 

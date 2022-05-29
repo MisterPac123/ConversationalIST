@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.conversationalist;
+package pt.ulisboa.tecnico.cmov.conversationalist.classes;
 
 import java.io.Serializable;
 

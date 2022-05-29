@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
-import pt.ulisboa.tecnico.cmov.conversationalist.UserAccount;
+import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
 
 public class SignupActivity extends AppCompatActivity {
     UserAccount user;

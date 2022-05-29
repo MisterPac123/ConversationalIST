@@ -4,40 +4,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.NewChat">
+    tools:context=".activities.MainActivity">
 
     <EditText
         android:id="@+id/editTxtNewChatroomTitle"
         android:layout_width="316dp"
         android:layout_height="48dp"
-        android:layout_marginStart="42dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="40dp"
         android:ems="10"
         android:hint="Chat Name"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="70dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/chatTypesSpinner"
+        style="@style/Base.Widget.AppCompat.Spinner.Underlined"
         android:layout_width="316dp"
         android:layout_height="48dp"
-        android:layout_marginStart="42dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="16dp"
         android:contentDescription="@string/app_name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTxtNewChatroomTitle"
-        style="@style/Base.Widget.AppCompat.Spinner.Underlined"/>
+        app:layout_constraintTop_toBottomOf="@+id/editTxtNewChatroomTitle" />
 
     <EditText
         android:id="@+id/editTxtNewChatroomDescr"
-        android:layout_width="307dp"
-        android:layout_height="84dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="316dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="Description..."
         android:inputType="textPersonName"
-        app:layout_constraintTop_toBottomOf="@+id/chatTypesSpinner"
-        tools:layout_editor_absoluteX="42dp" />
+        app:layout_constraintEnd_toEndOf="@+id/chatTypesSpinner"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chatTypesSpinner" />
+
+    <Button
+        android:id="@+id/createNewChatroom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="Create"
+        app:layout_constraintEnd_toEndOf="@+id/chatTypesSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/editTxtNewChatroomDescr" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

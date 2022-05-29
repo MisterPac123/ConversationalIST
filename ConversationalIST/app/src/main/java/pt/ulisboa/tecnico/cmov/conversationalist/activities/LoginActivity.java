@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
-import pt.ulisboa.tecnico.cmov.conversationalist.UserAccount;
+import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         //check if user in database
         //get user from database
         //(for now just create user)
-        user = new UserAccount(username, "random@email.com", password, "random name");
+        user = new UserAccount(username, "random@email.com", password, username);
         return true;
     }
 
@@ -77,7 +77,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 startActivity(switchActivityIntent);
             }
-
         });
 
     }
