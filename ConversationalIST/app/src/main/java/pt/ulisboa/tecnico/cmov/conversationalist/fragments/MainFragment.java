@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.conversationalist.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,11 +23,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
+import pt.ulisboa.tecnico.cmov.conversationalist.activities.ChatRoomActivity;
+import pt.ulisboa.tecnico.cmov.conversationalist.activities.MainActivity;
 import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatRoomListAdp;
+import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoom;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoomTypes;
 
 public class MainFragment extends Fragment {
+
+
+    UserAccount user;
 
     private AlertDialog dialog;
     private AlertDialog.Builder dialogBuilder;
@@ -46,15 +53,15 @@ public class MainFragment extends Fragment {
         ChatRoomListAdp chatListAdp = new ChatRoomListAdp(availableChats);
 
         getUserInfo(view);
-        displayChatList(view, chatListAdp);
         configNewChatButton(view, chatListAdp);
+        displayChatList(view, chatListAdp);
+
 
         return view;
     }
 
     public void getUserInfo(View view) {
         TextView helloUser = view.findViewById(R.id.helloUser);
-        //transfer data to fragment!!
         /*if(getIntent().getExtras() != null) {
             user = (UserAccount) getIntent().getSerializableExtra("user");
             helloUser.setText("Ahoy " + user.getName());
@@ -86,10 +93,27 @@ public class MainFragment extends Fragment {
         chatsListView.setAdapter(chatListAdp);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         chatsListView.setLayoutManager(linearLayoutManager);
+
+        //chatsListView.setOnClickListener();
+        /*chatsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                ChatRoom item = availableChats.get(position);
+                openChatRoom(item);
+
+            }
+        });*/
         //MainActivity main = (MainActivity) getActivity();
         //ChatRoomListAdapter chatListAdapter = new ChatRoomListAdapter(main, R.layout.chatlist_row_item, availableChats);
         //chatsListView.setAdapter(chatListAdapter);
         //chatsListView.setEmptyView(noChatsMsg);
+    }
+
+    public void openChatRoom(ChatRoom chat) {
+        Intent intent = new Intent(getActivity(), ChatRoomActivity.class);
+        intent.putExtra("user", user);
+        intent.putExtra("chat", chat);
+        startActivity(intent);
     }
 
 

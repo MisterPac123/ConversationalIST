@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.conversationalist.adapters;
 
-import android.util.Log;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -20,7 +19,7 @@ import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoomTypes;
 
 public class ChatRoomListAdapter extends ArrayAdapter<ChatRoom> {
 
-    private MainActivity context;
+    private Context context;
     private int resource;
     private ArrayList<ChatRoom> availableChats;
 
@@ -44,7 +43,7 @@ public class ChatRoomListAdapter extends ArrayAdapter<ChatRoom> {
         convertView = inflater.inflate(resource, parent, false);
 
 
-        TextView titleText = (TextView) convertView.findViewById(R.id.title);
+        TextView titleText = (TextView) convertView.findViewById(R.id.chatTitle);
         ImageView imageView = (ImageView) convertView.findViewById(R.id.icon);
         TextView subtitleText = (TextView) convertView.findViewById(R.id.subtitle);
 
