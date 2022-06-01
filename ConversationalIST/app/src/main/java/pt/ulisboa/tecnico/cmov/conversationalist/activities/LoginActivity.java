@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         newChat_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                handleLoginDialog();
+                //handleLoginDialog();
 
                 if(verifyLogin()){
                     startMainActivity();

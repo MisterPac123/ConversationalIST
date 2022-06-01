@@ -70,22 +70,19 @@ public class MainFragment extends Fragment {
             helloUser.setText("Ahoy user");
     }
 
-    public void configNewChatButton(View view, ChatRoomListAdp chatListAdp){
-        Button newChat_Button = (Button) view.findViewById(R.id.newChat);
+    public void configNewChatButton(View parentView, ChatRoomListAdp chatListAdp){
+        Button newChat_Button = (Button) parentView.findViewById(R.id.newChat);
         newChat_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createNewChatDialog(view, chatListAdp);
+                createNewChatDialog(view, chatListAdp, parentView);
             }
         });
     }
 
     public void displayChatList(View view, ChatRoomListAdp chatListAdp ) {
 
-        if(availableChats.size()>0){
-            TextView emptyListmsg = view.findViewById(R.id.EmptyChatListMsg);
-            emptyListmsg.setVisibility(View.INVISIBLE);
-        }
+        verifyChatListEmpty(view);
 
         RecyclerView chatsListView = view.findViewById(R.id.chatRoom_List);
 
@@ -116,12 +113,19 @@ public class MainFragment extends Fragment {
         startActivity(intent);
     }
 
+    public void verifyChatListEmpty(View view) {
+        if(availableChats.size()>0){
+            TextView emptyListmsg = view.findViewById(R.id.EmptyChatListMsg);
+            emptyListmsg.setVisibility(View.INVISIBLE);
+        }
+    }
+
 
 //  ##########################
 //  ### new chatroom PopUp ###
 //  ##########################
 
-    public void createNewChatDialog(View view, ChatRoomListAdp chatListAdp){
+    public void createNewChatDialog(View view, ChatRoomListAdp chatListAdp, View parentView){
         EditText input_name;
         EditText description;
         final String[] chatroom_type = new String[1];
@@ -168,7 +172,9 @@ public class MainFragment extends Fragment {
                     dialogInterface.dismiss();
                     Log.i("create chat", "estou no criar chat " + availableChats.size());
                     chatListAdp.notifyItemInserted(availableChats.size()-1);
+
                 }
+                verifyChatListEmpty(parentView);
             }
         });
 
