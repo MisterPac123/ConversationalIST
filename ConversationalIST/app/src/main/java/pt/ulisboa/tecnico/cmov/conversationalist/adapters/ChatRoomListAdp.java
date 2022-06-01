@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter;
 import java.util.ArrayList;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
-import pt.ulisboa.tecnico.cmov.conversationalist.chatroom.ChatRoom;
+import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoom;
 
 public class ChatRoomListAdp extends Adapter<ChatRoomListAdp.ViewHolderClass> {
 

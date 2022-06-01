@@ -23,8 +23,8 @@ import java.util.ArrayList;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatRoomListAdp;
-import pt.ulisboa.tecnico.cmov.conversationalist.chatroom.ChatRoom;
-import pt.ulisboa.tecnico.cmov.conversationalist.chatroom.ChatRoomTypes;
+import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoom;
+import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoomTypes;
 
 public class MainFragment extends Fragment {
 

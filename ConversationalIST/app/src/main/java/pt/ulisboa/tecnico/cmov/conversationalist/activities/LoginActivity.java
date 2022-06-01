@@ -14,14 +14,13 @@ import android.widget.Toast;
 import java.util.HashMap;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
-import pt.ulisboa.tecnico.cmov.conversationalist.UserAccount;
+import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
 import pt.ulisboa.tecnico.cmov.conversationalist.results.LoginResult;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
 
 public class LoginActivity extends AppCompatActivity {
 

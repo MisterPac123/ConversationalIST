@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         getUserInfo();
 
         configNewChatButton();
-        displayChatList();
+        //displayChatList();
     }
 
     public void getUserInfo() {

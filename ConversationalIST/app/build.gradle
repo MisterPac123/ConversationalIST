@@ -5,6 +5,8 @@ plugins {
 android {
     compileSdk 32
 
+    namespace "pt.ulisboa.tecnico.cmov.conversationalist"
+
     defaultConfig {
         applicationId "pt.ulisboa.tecnico.cmov.conversationalist"
         minSdk 28
