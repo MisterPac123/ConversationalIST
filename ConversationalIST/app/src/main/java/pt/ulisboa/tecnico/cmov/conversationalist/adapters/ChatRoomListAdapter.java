@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmov.conversationalist.adapters;
 
+import android.util.Log;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -19,7 +20,7 @@ import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoomTypes;
 
 public class ChatRoomListAdapter extends ArrayAdapter<ChatRoom> {
 
-    private Context context;
+    private MainActivity context;
     private int resource;
     private ArrayList<ChatRoom> availableChats;
 
@@ -62,4 +63,4 @@ public class ChatRoomListAdapter extends ArrayAdapter<ChatRoom> {
         Intent switchActivityIntent = new Intent(context, ChatRoomActivity.class);
         context.startActivity(switchActivityIntent);
     }
-}  
+}
