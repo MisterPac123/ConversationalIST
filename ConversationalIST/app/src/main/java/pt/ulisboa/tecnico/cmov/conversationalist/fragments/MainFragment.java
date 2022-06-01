@@ -43,9 +43,6 @@ public class MainFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        ChatRoom chat1 = new ChatRoom("name", "Public", "desc");
-        availableChats.add(chat1);
-
         ChatRoomListAdp chatListAdp = new ChatRoomListAdp(availableChats);
 
         getUserInfo(view);
@@ -77,6 +74,11 @@ public class MainFragment extends Fragment {
     }
 
     public void displayChatList(View view, ChatRoomListAdp chatListAdp ) {
+
+        if(availableChats.size()>0){
+            TextView emptyListmsg = view.findViewById(R.id.EmptyChatListMsg);
+            emptyListmsg.setVisibility(View.INVISIBLE);
+        }
 
         RecyclerView chatsListView = view.findViewById(R.id.chatRoom_List);
 
