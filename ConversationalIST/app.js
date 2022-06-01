@@ -52,6 +52,7 @@ mongoClient.connect(url, (err, db) => {
                         name: result.name,
                         email: result.email
                     }
+                    console.log("Login")
                     
                     res.status(200).send(JSON.stringify(objToSend))
 

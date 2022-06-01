@@ -79,7 +79,6 @@ public class MainFragment extends Fragment {
     public void displayChatList(View view, ChatRoomListAdp chatListAdp ) {
 
         RecyclerView chatsListView = view.findViewById(R.id.chatRoom_List);
-        Log.i("ChatListView", chatsListView.toString());
 
         Log.i("chats:", String.valueOf(availableChats.size()));
         chatsListView.setAdapter(chatListAdp);
@@ -142,8 +141,7 @@ public class MainFragment extends Fragment {
                     availableChats.add(new_chatRoom);
                     dialogInterface.dismiss();
                     Log.i("create chat", "estou no criar chat " + availableChats.size());
-                    //chatListAdp.notifyItemInserted(availableChats.size()-1);
-                    displayChatList(view, chatListAdp);
+                    chatListAdp.notifyItemInserted(availableChats.size()-1);
                 }
             }
         });
