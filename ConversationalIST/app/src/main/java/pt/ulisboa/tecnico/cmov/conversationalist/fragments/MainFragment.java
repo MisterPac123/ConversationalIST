@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -30,7 +31,7 @@ import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoom;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoomTypes;
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickListener {
 
 
     UserAccount user;
@@ -51,8 +52,10 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
         ChatRoomListAdp chatListAdp = new ChatRoomListAdp(availableChats);
+        if(this.getArguments() != null )
+            user = (UserAccount) this.getArguments().getSerializable("user");
 
-        getUserInfo(view);
+        getUserInfo(view, user);
         configNewChatButton(view, chatListAdp);
         displayChatList(view, chatListAdp);
 
@@ -60,13 +63,12 @@ public class MainFragment extends Fragment {
         return view;
     }
 
-    public void getUserInfo(View view) {
+    public void getUserInfo(View view, UserAccount user) {
         TextView helloUser = view.findViewById(R.id.helloUser);
-        /*if(getIntent().getExtras() != null) {
-            user = (UserAccount) getIntent().getSerializableExtra("user");
+        if(user != null) {
             helloUser.setText("Ahoy " + user.getName());
         }
-        else*/
+        else
             helloUser.setText("Ahoy user");
     }
 
@@ -88,6 +90,8 @@ public class MainFragment extends Fragment {
 
         Log.i("chats:", String.valueOf(availableChats.size()));
         chatsListView.setAdapter(chatListAdp);
+        chatListAdp.setClickListener(this);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         chatsListView.setLayoutManager(linearLayoutManager);
 
@@ -128,6 +132,7 @@ public class MainFragment extends Fragment {
     public void createNewChatDialog(View view, ChatRoomListAdp chatListAdp, View parentView){
         EditText input_name;
         EditText description;
+        Button newChatButton;
         final String[] chatroom_type = new String[1];
 
         dialogBuilder = new AlertDialog.Builder(getActivity());
@@ -136,6 +141,8 @@ public class MainFragment extends Fragment {
 
         input_name = newChatPopupView.findViewById(R.id.editTxtNewChatroomTitle);
         description = newChatPopupView.findViewById(R.id.editTxtNewChatroomDescr);
+        newChatButton = newChatPopupView.findViewById(R.id.createNewChatroom);
+
 
         //Spinner
         newChatTypesSpinner = newChatPopupView.findViewById(R.id.chatTypesSpinner);
@@ -181,5 +188,13 @@ public class MainFragment extends Fragment {
         dialogBuilder.setView(newChatPopupView);
         dialog = dialogBuilder.create();
         dialog.show();
+    }
+
+
+    @Override
+    public void onClick(View view, int position) {
+        Toast t = Toast.makeText(getContext(), "hello", Toast.LENGTH_LONG);
+        ChatRoom chat = availableChats.get(position);
+        openChatRoom(chat);
     }
 }

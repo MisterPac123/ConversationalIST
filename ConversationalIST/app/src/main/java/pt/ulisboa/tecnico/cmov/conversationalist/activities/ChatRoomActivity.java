@@ -47,7 +47,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         }
         user = (UserAccount) intent.getSerializable("user");
 
-        populatemsgArray();
+        //populatemsgArray();
 
         displayMsgs();
 
