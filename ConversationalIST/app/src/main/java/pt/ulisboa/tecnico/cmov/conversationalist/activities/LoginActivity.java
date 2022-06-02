@@ -24,8 +24,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private Retrofit retrofit;
-    private RetrofitInterface retrofitInterface;
+    private Retrofit retrofit2;
+    private RetrofitInterface retrofitInterface2;
     private String BASE_URL = "http://10.0.2.2:3000";
 
     UserAccount user;
@@ -34,32 +34,35 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        configLoginButton();
-        configSignupButton();
 
-        retrofit = new Retrofit.Builder()
+        retrofit2 = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        retrofitInterface = retrofit.create(RetrofitInterface.class);
+        retrofitInterface2 = retrofit2.create(RetrofitInterface.class);
+
+        configLoginButton();
+        configSignupButton();
+
+
 
     }
-    public void configLoginButton(){
+    private void configLoginButton(){
         Button newChat_Button = (Button) findViewById(R.id.loginButton);
         newChat_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //handleLoginDialog();
+
 
                 if(verifyLogin()){
-                    startMainActivity();
+                    handleLoginDialog();
                 }
             }
         });
     }
 
-    public boolean verifyLogin(){
+    private boolean verifyLogin(){
         EditText usernameEditTxt = findViewById(R.id.usernameEditText);
         EditText passwordEditTxt = findViewById(R.id.passwordEditText);
 
@@ -77,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
         //check if user in database
         //get user from database
         //(for now just create user)
-        user = new UserAccount(username, "random@email.com", password, "random name");
+        //user = new UserAccount(username, "random@email.com", password, "random name");
         return true;
     }
 
@@ -111,19 +114,19 @@ public class LoginActivity extends AppCompatActivity {
         builder.setView(view).show();
 
         Button loginBtn = view.findViewById(R.id.loginButton);
-        EditText usernameEdit = view.findViewById(R.id.usernameEditText);
-        EditText passwordEdit = view.findViewById(R.id.passwordEditText);
+        final EditText usernameEdit = view.findViewById(R.id.usernameEditText);
+        final EditText passwordEdit = view.findViewById(R.id.passwordEditText);
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
 
                 HashMap<String, String> map = new HashMap<>();
 
                 map.put("username", usernameEdit.getText().toString());
                 map.put("password", passwordEdit.getText().toString());
 
-                Call<LoginResult> call = retrofitInterface.executeLogin(map);
+                Call<LoginResult> call = retrofitInterface2.executeLogin(map);
 
                 call.enqueue(new Callback<LoginResult>() {
                     @Override
@@ -134,11 +137,12 @@ public class LoginActivity extends AppCompatActivity {
                             LoginResult result = response.body();
 
                             AlertDialog.Builder builder1 = new AlertDialog.Builder(LoginActivity.this);
-                            assert result != null;
                             builder1.setTitle(result.getUsername());
                             builder1.setMessage(result.getEmail());
 
                             builder1.show();
+
+                            startMainActivity();
 
                         } else if(response.code() == 404){
                             Toast.makeText(LoginActivity.this, "WrongCredentials", Toast.LENGTH_LONG).show();

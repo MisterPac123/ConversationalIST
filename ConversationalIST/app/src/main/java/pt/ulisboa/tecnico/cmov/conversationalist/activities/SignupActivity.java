@@ -47,14 +47,13 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
-    public void configSignButton(){
-        Button newChat_Button = (Button) findViewById(R.id.signButton);
+    private void configSignButton(){
+        Button newChat_Button = findViewById(R.id.signButton);
         newChat_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(verifySign()){
                     handleSignupDialog();
-                    startSignupActivity();
                 }
             }
         });
@@ -96,7 +95,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void startSignupActivity() {
-        Intent switchActivityIntent = new Intent(this, MainActivity.class);
+        Intent switchActivityIntent = new Intent(this, LoginActivity.class);
         switchActivityIntent.putExtra("user", user);
         startActivity(switchActivityIntent);
     }
@@ -110,14 +109,14 @@ public class SignupActivity extends AppCompatActivity {
         builder.setView(view).show();
 
         Button signupBtn = view.findViewById(R.id.signButton);
-        EditText usernameEdit = view.findViewById(R.id.signUsernameEditText);
-        EditText passwordEdit = view.findViewById(R.id.signPasswordEditText);
-        EditText nameEdit = view.findViewById(R.id.signNameEditText);
-        EditText emailEdit = view.findViewById(R.id.signEmailEditText);
+        final EditText usernameEdit = view.findViewById(R.id.signUsernameEditText);
+        final EditText passwordEdit = view.findViewById(R.id.signPasswordEditText);
+        final EditText nameEdit = view.findViewById(R.id.signNameEditText);
+        final EditText emailEdit = view.findViewById(R.id.signEmailEditText);
 
         signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
 
                 HashMap<String, String> map = new HashMap<>();
 
@@ -126,17 +125,19 @@ public class SignupActivity extends AppCompatActivity {
                 map.put("username", usernameEdit.getText().toString());
                 map.put("password", passwordEdit.getText().toString());
 
-                Call<SignupResult> call = retrofitInterface.executeSignup(map);
+                Call<Void> call = retrofitInterface.executeSignup(map);
 
-                call.enqueue(new Callback<SignupResult>() {
+                call.enqueue(new Callback<Void>() {
                     @Override
-                    public void onResponse(Call<SignupResult> call, Response<SignupResult> response) {
+                    public void onResponse(Call<Void> call, Response<Void> response) {
 
-                        if (response.code() == 200){
+                        if (response.code() == 200) {
 
                             Toast.makeText(SignupActivity.this, "Signup Successfully", Toast.LENGTH_LONG).show();
 
-                        } else if(response.code() == 404){
+                            startSignupActivity();
+
+                        } else if (response.code() == 400) {
 
                             Toast.makeText(SignupActivity.this, "Already Registered", Toast.LENGTH_LONG).show();
 
@@ -145,11 +146,10 @@ public class SignupActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<SignupResult> call, Throwable t) {
+                    public void onFailure(Call<Void> call, Throwable t) {
                         Toast.makeText(SignupActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
-
             }
         });
 

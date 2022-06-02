@@ -24,25 +24,31 @@ mongoClient.connect(url, (err, db) => {
                 password: req.body.password
             }
 
+	    console.log("signup")
+
             const query = { email: newUser.email }
 
             collection.findOne(query, (err, result) => {
 
                 if(result == null){
+		    console.log("signup sucess")
                     collection.insertOne(newUser, (err, result) =>{
                         res.status(200).send()
                     })
                 } else {
+		    console.log("signup failed")
                     res.status(400).send()
                 }
             })
 
         })
-
+	
         app.post('/login', (req, res) =>{
 
-            const query = { email: req.body.email,
+            const query = { username: req.body.username,
                             password: req.body.password}
+
+	    console.log("Login")
 
             collection.findOne(query, (err, result) => {
 
@@ -52,11 +58,12 @@ mongoClient.connect(url, (err, db) => {
                         name: result.name,
                         email: result.email
                     }
-                    console.log("Login")
                     
+		    console.log("Login success")
                     res.status(200).send(JSON.stringify(objToSend))
 
                 } else {
+		    console.log("Login fail")
                     res.status(404).send()
                 }
 

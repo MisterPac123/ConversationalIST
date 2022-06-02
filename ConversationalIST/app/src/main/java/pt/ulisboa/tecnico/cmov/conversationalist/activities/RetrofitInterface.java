@@ -15,5 +15,5 @@ public interface RetrofitInterface {
     Call<LoginResult> executeLogin(@Body HashMap<String, String> map);
 
     @POST("/signup")
-    Call<SignupResult> executeSignup(@Body HashMap<String, String> map);
+    Call<Void> executeSignup(@Body HashMap<String, String> map);
 }
