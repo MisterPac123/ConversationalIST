@@ -49,11 +49,12 @@ public class LoginActivity extends AppCompatActivity {
 
     }
     private void configLoginButton(){
-        Button newChat_Button = (Button) findViewById(R.id.loginButton);
-        newChat_Button.setOnClickListener(new View.OnClickListener() {
+
+        Button loginBtn = findViewById(R.id.loginButton);
+
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
 
                 if(verifyLogin()){
                     handleLoginDialog();
@@ -107,55 +108,35 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleLoginDialog() {
 
-        View view = getLayoutInflater().inflate(R.layout.activity_login, null);
+        final EditText usernameEdit = findViewById(R.id.usernameEditText);
+        final EditText passwordEdit = findViewById(R.id.passwordEditText);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        HashMap<String, String> map = new HashMap<>();
 
-        builder.setView(view).show();
+        map.put("username", usernameEdit.getText().toString());
+        map.put("password", passwordEdit.getText().toString());
 
-        Button loginBtn = view.findViewById(R.id.loginButton);
-        final EditText usernameEdit = view.findViewById(R.id.usernameEditText);
-        final EditText passwordEdit = view.findViewById(R.id.passwordEditText);
+        Call<LoginResult> call = retrofitInterface2.executeLogin(map);
 
-        loginBtn.setOnClickListener(new View.OnClickListener() {
+        call.enqueue(new Callback<LoginResult>() {
             @Override
-            public void onClick(View view) {
+            public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
 
-                HashMap<String, String> map = new HashMap<>();
+                if (response.code() == 200){
 
-                map.put("username", usernameEdit.getText().toString());
-                map.put("password", passwordEdit.getText().toString());
+                    Toast.makeText(LoginActivity.this, "LoginSuccessfully", Toast.LENGTH_LONG).show();
 
-                Call<LoginResult> call = retrofitInterface2.executeLogin(map);
+                    startMainActivity();
 
-                call.enqueue(new Callback<LoginResult>() {
-                    @Override
-                    public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
+                } else if(response.code() == 404){
+                    Toast.makeText(LoginActivity.this, "WrongCredentials", Toast.LENGTH_LONG).show();
+                }
 
-                        if (response.code() == 200){
+            }
 
-                            LoginResult result = response.body();
-
-                            AlertDialog.Builder builder1 = new AlertDialog.Builder(LoginActivity.this);
-                            builder1.setTitle(result.getUsername());
-                            builder1.setMessage(result.getEmail());
-
-                            builder1.show();
-
-                            startMainActivity();
-
-                        } else if(response.code() == 404){
-                            Toast.makeText(LoginActivity.this, "WrongCredentials", Toast.LENGTH_LONG).show();
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<LoginResult> call, Throwable t) {
-                        Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
-
+            @Override
+            public void onFailure(Call<LoginResult> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
