@@ -162,10 +162,13 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
             }
         });
 
+        dialogBuilder.setView(newChatPopupView);
+        dialog = dialogBuilder.create();
+
         //create button (talvez mudar de positiveButton para button normal)
-        dialogBuilder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+        newChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(View view) {
                 String name = input_name.getText().toString();
                 Log.i("create chat", "estou no criar chat (early) " + availableChats.size());
                 if(name.matches("")) {
@@ -176,7 +179,7 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
                 else if (!newChatTypesSpinner.getSelectedItem().toString().equalsIgnoreCase("Chat type…")) {
                     ChatRoom new_chatRoom = new ChatRoom(name, chatroom_type[0], description.getText().toString());
                     availableChats.add(new_chatRoom);
-                    dialogInterface.dismiss();
+                    dialog.dismiss();
                     Log.i("create chat", "estou no criar chat " + availableChats.size());
                     chatListAdp.notifyItemInserted(availableChats.size()-1);
 
@@ -185,8 +188,6 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
             }
         });
 
-        dialogBuilder.setView(newChatPopupView);
-        dialog = dialogBuilder.create();
         dialog.show();
     }
 
