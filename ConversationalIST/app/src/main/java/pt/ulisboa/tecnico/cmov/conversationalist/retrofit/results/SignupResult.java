@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.conversationalist.results;
+package pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results;
 
 public class SignupResult {
 

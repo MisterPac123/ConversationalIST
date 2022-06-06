@@ -3,24 +3,22 @@ package pt.ulisboa.tecnico.cmov.conversationalist.classes;
 import java.io.Serializable;
 
 public class UserAccount implements Serializable {
-    private String userID;
+    private String username;
     private String email;
     private String name;
-    private String password;
 
-    public UserAccount(String _userID, String _email, String _password, String _name) {
-        this.userID = _userID;
+    public UserAccount(String _userID, String _email, String _name) {
+        this.username = _userID;
         this.email = _email;
-        this.password = _password;
         this.name = _name;
     }
 
-    public String getUserID() {
-        return userID;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setUsername(String userID) {
+        this.username = userID;
     }
 
     public String getEmail() {
@@ -39,11 +37,4 @@ public class UserAccount implements Serializable {
         this.name = name;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

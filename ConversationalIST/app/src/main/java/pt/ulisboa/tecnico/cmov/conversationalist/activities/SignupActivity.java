@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.conversationalist.activities;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,8 +13,7 @@ import java.util.HashMap;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
-import pt.ulisboa.tecnico.cmov.conversationalist.results.LoginResult;
-import pt.ulisboa.tecnico.cmov.conversationalist.results.SignupResult;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.RetrofitInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,16 +33,20 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        initBackendConnection();
+
+        configSignButton();
+
+
+    }
+
+    public void initBackendConnection() {
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         retrofitInterface = retrofit.create(RetrofitInterface.class);
-
-        configSignButton();
-
-
     }
 
     private void configSignButton(){
@@ -90,7 +92,7 @@ public class SignupActivity extends AppCompatActivity {
         }
         //check if username unique
         //check if email already exists in db
-        user = new UserAccount(username, email, password, name);
+        user = new UserAccount(username, email, name);
         return true;
     }
 

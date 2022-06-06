@@ -64,7 +64,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         timeFormat = new SimpleDateFormat("HH:mm:ss aaa z");
         String date = dateFormat.format(calendar.getTime());
         String time = timeFormat.format(calendar.getTime());
-        UserAccount user1 = new UserAccount("user_test", "user_test@test.com","test", "test" );
+        UserAccount user1 = new UserAccount("user_test", "user_test@test.com","test" );
         Message newMsg = new Message("msg", user1, date, time);
         messagesArray.add(newMsg);
     }

@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmov.conversationalist.fragments;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,14 +21,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.activities.ChatRoomActivity;
-import pt.ulisboa.tecnico.cmov.conversationalist.activities.MainActivity;
+import pt.ulisboa.tecnico.cmov.conversationalist.activities.LoginActivity;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.RetrofitInterface;
 import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatRoomListAdp;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoom;
-import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoomTypes;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.LoginResult;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.SearchChatRoomResults;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.UserChatRoomsResults;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickListener {
 
@@ -39,7 +47,13 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
     private AlertDialog dialog;
     private AlertDialog.Builder dialogBuilder;
     private Spinner newChatTypesSpinner;
+    private ChatRoomListAdp chatListAdp;
     private ArrayList<ChatRoom> availableChats = new ArrayList<>();
+    private ArrayList<SearchChatRoomResults> userChatRoomArrayList = new ArrayList<>();
+
+    private Retrofit retrofit;
+    private RetrofitInterface retrofitInterface;
+    private String BASE_URL = "http://10.0.2.2:3000";
 
     public MainFragment(){
         // require a empty public constructor
@@ -51,16 +65,25 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        ChatRoomListAdp chatListAdp = new ChatRoomListAdp(availableChats);
+        initBackendConnection();
+
         if(this.getArguments() != null )
             user = (UserAccount) this.getArguments().getSerializable("user");
 
         getUserInfo(view, user);
-        configNewChatButton(view, chatListAdp);
-        displayChatList(view, chatListAdp);
-
+        configNewChatButton(view);
+        getUserChatRooms(view);
 
         return view;
+    }
+
+    public void initBackendConnection() {
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        retrofitInterface = retrofit.create(RetrofitInterface.class);
     }
 
     public void getUserInfo(View view, UserAccount user) {
@@ -72,12 +95,12 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
             helloUser.setText("Ahoy user");
     }
 
-    public void configNewChatButton(View parentView, ChatRoomListAdp chatListAdp){
+    public void configNewChatButton(View parentView){
         Button newChat_Button = (Button) parentView.findViewById(R.id.newChat);
         newChat_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createNewChatDialog(view, chatListAdp, parentView);
+                createNewChatDialog(view, parentView);
             }
         });
     }
@@ -124,14 +147,74 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
         }
     }
 
+    public void getUserChatRooms(View view) {
+        HashMap<String, String> map = new HashMap<>();
 
-//  ##########################
-//  ### new chatroom PopUp ###
-//  ##########################
+        map.put("username", user.getUsername());
 
-    public void createNewChatDialog(View view, ChatRoomListAdp chatListAdp, View parentView){
+        Call<ArrayList<SearchChatRoomResults>> call = retrofitInterface.executeGetUserChatRoom(map);
+
+        call.enqueue(new Callback<ArrayList<SearchChatRoomResults>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SearchChatRoomResults>> call, Response<ArrayList<SearchChatRoomResults>> response) {
+
+                if (response.code() == 200){
+
+                    availableChats = new ArrayList<>();
+                    userChatRoomArrayList = response.body();
+                    for ( int i = 0; i < userChatRoomArrayList.size(); i++) {
+                        SearchChatRoomResults data = userChatRoomArrayList.get(i);
+                        ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription());
+                        Log.i("chat found", data.getName());
+                        availableChats.add(chatroom);
+                    }
+
+                    chatListAdp = new ChatRoomListAdp(availableChats);
+
+                    displayChatList(view, chatListAdp);
+
+
+                    /*String name = response.body().getName();
+                    String description = response.body().getDescription();
+                    String type = response.body().getType();
+
+                    ChatRoom chatRoom = new ChatRoom(name, type, description);
+
+                    availableChats.add(chatRoom);*/
+                    Toast.makeText(getActivity(), "right", Toast.LENGTH_LONG).show();
+
+
+                } else if(response.code() == 404){
+                    Toast.makeText(getActivity(), "No chats error", Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<SearchChatRoomResults>> call, Throwable t) {
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+//  ########################################################################
+//  ########################## new chatroom PopUp ##########################
+//  ########################################################################
+
+    public void createNewChatDialog(View view, View parentView){
         EditText input_name;
-        EditText description;
+        EditText input_description;
         Button newChatButton;
         final String[] chatroom_type = new String[1];
 
@@ -140,7 +223,7 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
         dialogBuilder.setTitle("New ChatRoom");
 
         input_name = newChatPopupView.findViewById(R.id.editTxtNewChatroomTitle);
-        description = newChatPopupView.findViewById(R.id.editTxtNewChatroomDescr);
+        input_description = newChatPopupView.findViewById(R.id.editTxtNewChatroomDescr);
         newChatButton = newChatPopupView.findViewById(R.id.createNewChatroom);
 
 
@@ -165,11 +248,11 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
         dialogBuilder.setView(newChatPopupView);
         dialog = dialogBuilder.create();
 
-        //create button (talvez mudar de positiveButton para button normal)
         newChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String name = input_name.getText().toString();
+                String description = input_description.getText().toString();
                 Log.i("create chat", "estou no criar chat (early) " + availableChats.size());
                 if(name.matches("")) {
                     input_name.setError("Chat name is required");
@@ -177,11 +260,8 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
                 }
 
                 else if (!newChatTypesSpinner.getSelectedItem().toString().equalsIgnoreCase("Chat type…")) {
-                    ChatRoom new_chatRoom = new ChatRoom(name, chatroom_type[0], description.getText().toString());
-                    availableChats.add(new_chatRoom);
+                    createNewChat(name, description, chatroom_type);
                     dialog.dismiss();
-                    Log.i("create chat", "estou no criar chat " + availableChats.size());
-                    chatListAdp.notifyItemInserted(availableChats.size()-1);
 
                 }
                 verifyChatListEmpty(parentView);
@@ -189,6 +269,42 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
         });
 
         dialog.show();
+    }
+
+    private void createNewChat(String name, String description , String[] chatroom_type) {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put("name", name);
+        map.put("type", chatroom_type[0]);
+        map.put("description", description);
+        map.put("admin", user.getUsername());
+
+        Call<Void> call = retrofitInterface.executeCreateNewChat(map);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                if (response.code() == 200) {
+                    Toast.makeText(getContext(), "ChatRoom added successfully", Toast.LENGTH_LONG).show();
+                } else if (response.code() == 400) {
+                    Toast.makeText(getContext(), "Name already exists", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+
+        ChatRoom new_chatRoom = new ChatRoom(name, chatroom_type[0], description);
+        availableChats.add(new_chatRoom);
+
+        Log.i("create chat", "estou no criar chat " + availableChats.size());
+        chatListAdp.notifyItemInserted(availableChats.size()-1);
     }
 
 

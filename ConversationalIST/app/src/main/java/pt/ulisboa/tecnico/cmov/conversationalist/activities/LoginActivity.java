@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.conversationalist.activities;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -15,7 +14,8 @@ import java.util.HashMap;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
-import pt.ulisboa.tecnico.cmov.conversationalist.results.LoginResult;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.RetrofitInterface;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.LoginResult;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -125,6 +125,11 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.code() == 200){
 
                     Toast.makeText(LoginActivity.this, "LoginSuccessfully", Toast.LENGTH_LONG).show();
+                    String username = response.body().getUsername();
+                    String name = response.body().getName();
+                    String email = response.body().getEmail();
+
+                    user = new UserAccount(username, email, name);
 
                     startMainActivity();
 
