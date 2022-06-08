@@ -48,6 +48,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         user = (UserAccount) intent.getSerializable("user");
 
         populatemsgArray();
+        getMsgFromUser();
 
         displayMsgs();
 
@@ -57,6 +58,8 @@ public class ChatRoomActivity extends AppCompatActivity {
 
 
     }
+
+    priv
 
     private void populatemsgArray () {
         calendar = Calendar.getInstance();

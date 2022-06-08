@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cmov.conversationalist.fragments;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -41,6 +45,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickListener {
 
+    View view;
 
     UserAccount user;
 
@@ -50,6 +55,8 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
     private ChatRoomListAdp chatListAdp;
     private ArrayList<ChatRoom> availableChats = new ArrayList<>();
     private ArrayList<SearchChatRoomResults> userChatRoomArrayList = new ArrayList<>();
+    private ArrayList<SearchChatRoomResults> searchChatRoomArrayList = new ArrayList<>();
+
 
     private Retrofit retrofit;
     private RetrofitInterface retrofitInterface;
@@ -63,7 +70,7 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        view = inflater.inflate(R.layout.fragment_main, container, false);
 
         initBackendConnection();
 
@@ -72,9 +79,18 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
 
         getUserInfo(view, user);
         configNewChatButton(view);
+        configureSearchChat(view);
         getUserChatRooms(view);
 
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getUserChatRooms(view);
     }
 
     public void initBackendConnection() {
@@ -105,6 +121,93 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
         });
     }
 
+    public void configureSearchChat(View parentView) {
+        /*SearchView searchView = parentView.findViewById(R.id.);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });*/
+
+
+
+        ImageButton searchChatRoomBt = parentView.findViewById(R.id.searchChatRoomButton);
+        EditText searchChatRoomEt = parentView.findViewById(R.id.searchChatRoomEditText);
+        searchChatRoomBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name = searchChatRoomEt.getText().toString();
+                if (name.matches("")){
+                     Toast toast = Toast.makeText(getContext(), "Please insert the chatroom name in the searchbar", Toast.LENGTH_SHORT);
+                     toast.show();
+                }
+                else{
+                    getSearchChatRoomBackend(name);
+                }
+            }
+        });
+    }
+
+
+
+    public void getSearchChatRoomBackend(String name) {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put("chatName", name);
+
+        Call<ArrayList<SearchChatRoomResults>> call = retrofitInterface.executeSearchChatRoom(map);
+
+        call.enqueue(new Callback<ArrayList<SearchChatRoomResults>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SearchChatRoomResults>> call, Response<ArrayList<SearchChatRoomResults>> response) {
+
+                if (response.code() == 200){
+
+                    ArrayList <ChatRoom> searchChatsResult = new ArrayList<>();
+                    searchChatRoomArrayList = response.body();
+                    for ( int i = 0; i < searchChatRoomArrayList.size(); i++) {
+                        SearchChatRoomResults data = searchChatRoomArrayList.get(i);
+                        ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription());
+                        Log.i("chat found", data.getName());
+                        searchChatsResult.add(chatroom);
+
+                    }
+
+                    handleSearchChatRoom(searchChatsResult);
+
+
+
+                    //chatListAdp = new ChatRoomListAdp(availableChats);
+
+                    //displayChatList(view, chatListAdp);
+
+                } else if(response.code() == 404){
+                    Toast.makeText(getActivity(), "No chats error", Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<SearchChatRoomResults>> call, Throwable t) {
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void handleSearchChatRoom(ArrayList<ChatRoom> chatRoomsList){
+
+        SearchFragmentDialog dialog = new SearchFragmentDialog(chatRoomsList, retrofitInterface, user.getUsername());
+        dialog.setTargetFragment(this, 1);
+        dialog.show(getActivity().getSupportFragmentManager(), "FragmentDialog");
+    }
+
     public void displayChatList(View view, ChatRoomListAdp chatListAdp ) {
 
         verifyChatListEmpty(view);
@@ -117,20 +220,6 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         chatsListView.setLayoutManager(linearLayoutManager);
-
-        //chatsListView.setOnClickListener();
-        /*chatsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                ChatRoom item = availableChats.get(position);
-                openChatRoom(item);
-
-            }
-        });*/
-        //MainActivity main = (MainActivity) getActivity();
-        //ChatRoomListAdapter chatListAdapter = new ChatRoomListAdapter(main, R.layout.chatlist_row_item, availableChats);
-        //chatsListView.setAdapter(chatListAdapter);
-        //chatsListView.setEmptyView(noChatsMsg);
     }
 
     public void openChatRoom(ChatRoom chat) {
@@ -172,17 +261,6 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
                     chatListAdp = new ChatRoomListAdp(availableChats);
 
                     displayChatList(view, chatListAdp);
-
-
-                    /*String name = response.body().getName();
-                    String description = response.body().getDescription();
-                    String type = response.body().getType();
-
-                    ChatRoom chatRoom = new ChatRoom(name, type, description);
-
-                    availableChats.add(chatRoom);*/
-                    Toast.makeText(getActivity(), "right", Toast.LENGTH_LONG).show();
-
 
                 } else if(response.code() == 404){
                     Toast.makeText(getActivity(), "No chats error", Toast.LENGTH_LONG).show();
