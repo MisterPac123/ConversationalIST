@@ -3,11 +3,11 @@ package pt.ulisboa.tecnico.cmov.conversationalist.classes;
 public class Message {
 
     private String text;
-    private UserAccount sender;
+    private String sender;
     private String date;
     private String time;
 
-    public Message (String _msg, UserAccount user, String _date, String _time) {
+    public Message (String _msg, String user, String _date, String _time) {
         text = _msg;
         sender = user;
         date = _date;
@@ -15,7 +15,7 @@ public class Message {
     }
 
 
-    public void setSender(UserAccount sender) {
+    public void setSender(String sender) {
         this.sender = sender;
     }
 
@@ -35,5 +35,5 @@ public class Message {
 
     public void setTime(String time) { this.time = time; }
 
-    public UserAccount getSender() { return sender; }
+    public String getSender() { return sender; }
 }

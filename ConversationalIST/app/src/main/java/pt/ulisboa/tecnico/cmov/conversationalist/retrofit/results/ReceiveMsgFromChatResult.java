@@ -4,7 +4,6 @@ public class ReceiveMsgFromChatResult {
 
     private String msg;
     private String username;
-    private String time;
     private String date;
 
     public String getMsg() {
@@ -16,10 +15,6 @@ public class ReceiveMsgFromChatResult {
     public String getUsername() { return username; }
 
     public void setUsername(String username) { this.username = username; }
-
-    public String getTime() { return time; }
-
-    public void setTime(String time) { this.time = time; }
 
     public String getDate() { return date; }
 

@@ -22,8 +22,8 @@ import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatAdapter;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoom;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.Message;
-import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.MessageSend;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.RetrofitInterface;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.ReceiveMsgFromChatResult;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.SendMsgResult;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,9 +59,11 @@ public class ChatRoomActivity extends AppCompatActivity {
             //error
         }
         user = (UserAccount) intent.getSerializable("user");
+        chat = (ChatRoom) intent.getSerializable("chat");
+
         initBackendConnection();
         populatemsgArray();
-        //getMsgFromUser();
+        getMsgFromUser();
 
         displayMsgs();
 
@@ -89,8 +91,39 @@ public class ChatRoomActivity extends AppCompatActivity {
         String date = dateFormat.format(calendar.getTime());
         String time = timeFormat.format(calendar.getTime());
         UserAccount user1 = new UserAccount("user_test", "user_test@test.com","test" );
-        Message newMsg = new Message("msg", user1, date, time);
+        Message newMsg = new Message("msg", user1.getUsername(), date, time);
         messagesArray.add(newMsg);
+    }
+
+    private void getMsgFromUser() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("chatName", chat.getName());
+
+        Call<ArrayList<ReceiveMsgFromChatResult>> call = retrofitInterface.executeReceiveMsgFromChatRoom(map);
+
+        Log.i("receive msgs response", "hello");
+
+
+        call.enqueue(new Callback<ArrayList<ReceiveMsgFromChatResult>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ReceiveMsgFromChatResult>> call, Response<ArrayList<ReceiveMsgFromChatResult>> response) {
+                if (response.code() == 200) {
+                    ArrayList<ReceiveMsgFromChatResult> msgs = response.body();
+                    for (int i=0; i<msgs.size(); i++){
+
+                        ReceiveMsgFromChatResult msg = msgs.get(i);
+                        addMsgToList(msg.getDate(), msg.getMsg(), msg.getUsername());
+
+                        Log.i("receive msgs", msg.getMsg());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ReceiveMsgFromChatResult>> call, Throwable t) {
+
+            }
+        });
     }
 
 
@@ -104,7 +137,6 @@ public class ChatRoomActivity extends AppCompatActivity {
 
     public void configTitle(Bundle intent) {
         TextView title = this.findViewById(R.id.textName);
-        chat = (ChatRoom) intent.getSerializable("chat");
         title.setText(chat.getName());
     }
 
@@ -142,12 +174,17 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         Call<SendMsgResult> call = retrofitInterface.executeSendMsgToChatRoom(map);
 
+        Log.i("send msg response", "hello");
+
+
         call.enqueue(new Callback<SendMsgResult>() {
             @Override
-            public void onResponse(Call<SendMsgResult> call, Response<SendMsgResult> response) {
-                String date = response.body().getDate();
-                Log.i("send msg response" , date);
-                addMsgToList(date, msg);
+            public void onResponse( Call<SendMsgResult> call, Response<SendMsgResult> response) {
+                if (response.code() == 200) {
+                    String date = response.body().getDate();
+                    Log.i("send msg response", date);
+                    addMsgToList(date, msg, user.getName());
+                }
             }
 
             @Override
@@ -157,8 +194,8 @@ public class ChatRoomActivity extends AppCompatActivity {
         });
     }
 
-    public void addMsgToList (String date, String msg) {
-        Message newMsg = new Message(msg, user, date, date);
+    public void addMsgToList (String date, String msg, String userName) {
+        Message newMsg = new Message(msg, userName, date, date);
         messagesArray.add(newMsg);
         chat.addMsg(newMsg);
         msgsAdapter.notifyDataSetChanged();
