@@ -15,12 +15,21 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatAdapter;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoom;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.Message;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.MessageSend;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.RetrofitInterface;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.SendMsgResult;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatRoomActivity extends AppCompatActivity {
 
@@ -32,6 +41,10 @@ public class ChatRoomActivity extends AppCompatActivity {
     ChatRoom chat;
     RecyclerView recyclerView;
     ChatAdapter msgsAdapter;
+
+    private Retrofit retrofit;
+    private RetrofitInterface retrofitInterface;
+    private String BASE_URL = "http://10.0.2.2:3000";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +59,9 @@ public class ChatRoomActivity extends AppCompatActivity {
             //error
         }
         user = (UserAccount) intent.getSerializable("user");
-
+        initBackendConnection();
         populatemsgArray();
-        getMsgFromUser();
+        //getMsgFromUser();
 
         displayMsgs();
 
@@ -59,7 +72,15 @@ public class ChatRoomActivity extends AppCompatActivity {
 
     }
 
-    priv
+    public void initBackendConnection() {
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        retrofitInterface = retrofit.create(RetrofitInterface.class);
+    }
+
 
     private void populatemsgArray () {
         calendar = Calendar.getInstance();
@@ -104,20 +125,43 @@ public class ChatRoomActivity extends AppCompatActivity {
                     Log.i("no msg", "empty msg");
                 }
                 else{
-
-                    calendar = Calendar.getInstance();
-                    dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-                    timeFormat = new SimpleDateFormat("HH:mm:ss aaa z");
-                    String date = dateFormat.format(calendar.getTime());
-                    String time = timeFormat.format(calendar.getTime());
-                    Message newMsg = new Message(msg, user, date, time);
-                    messagesArray.add(newMsg);
-                    chat.addMsg(newMsg);
-                    msgsAdapter.notifyDataSetChanged();
+                    sendMsgToServer(msg);
                 }
 
             }
         });
+
+    }
+
+    public void sendMsgToServer(String msg) {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put("user", user.getName());
+        map.put("msg", msg);
+        map.put("chatName", chat.getName());
+
+        Call<SendMsgResult> call = retrofitInterface.executeSendMsgToChatRoom(map);
+
+        call.enqueue(new Callback<SendMsgResult>() {
+            @Override
+            public void onResponse(Call<SendMsgResult> call, Response<SendMsgResult> response) {
+                String date = response.body().getDate();
+                Log.i("send msg response" , date);
+                addMsgToList(date, msg);
+            }
+
+            @Override
+            public void onFailure(Call<SendMsgResult> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void addMsgToList (String date, String msg) {
+        Message newMsg = new Message(msg, user, date, date);
+        messagesArray.add(newMsg);
+        chat.addMsg(newMsg);
+        msgsAdapter.notifyDataSetChanged();
     }
 
 

@@ -7,6 +7,7 @@ import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.LoginResult;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.ReceiveMsgFromChatResult;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.SearchChatRoomResults;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.SendMsgResult;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.UserChatRoomsResults;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -33,7 +34,7 @@ public interface RetrofitInterface {
     Call<SearchChatRoomResults> executeAddUserToRoom(@Body HashMap<String, String> map);
 
     @POST("/sendMsgToChatRoom")
-    Call<Void> executeSendMsgToChatRoom(@Body HashMap<String, String> map);
+    Call<SendMsgResult> executeSendMsgToChatRoom(@Body HashMap<String, String> map);
 
     @POST("/receiveMsgFromChatRoom")
     Call<ReceiveMsgFromChatResult> executereceiveMsgFromChatRoom(@Body HashMap<String, String> map);
