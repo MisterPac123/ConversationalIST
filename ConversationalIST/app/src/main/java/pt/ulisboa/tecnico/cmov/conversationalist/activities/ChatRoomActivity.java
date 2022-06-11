@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Random;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatAdapter;
@@ -23,6 +25,7 @@ import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoom;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.Message;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.RetrofitInterface;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.ArrayMsgsFromChatResult;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.ReceiveMsgFromChatResult;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.SendMsgResult;
 import retrofit2.Call;
@@ -33,18 +36,21 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatRoomActivity extends AppCompatActivity {
 
-    UserAccount user;
-    Calendar calendar;
-    SimpleDateFormat dateFormat;
-    SimpleDateFormat timeFormat;
-    ArrayList<Message> messagesArray = new ArrayList<>();
-    ChatRoom chat;
-    RecyclerView recyclerView;
-    ChatAdapter msgsAdapter;
+    private UserAccount user;
+    private Calendar calendar;
+    private SimpleDateFormat dateFormat;
+    private SimpleDateFormat timeFormat;
+    private ArrayList<Message> messagesArray = new ArrayList<>();
+    private ChatRoom chat;
+    private RecyclerView recyclerView;
+    private ChatAdapter msgsAdapter;
 
     private Retrofit retrofit;
     private RetrofitInterface retrofitInterface;
     private String BASE_URL = "http://10.0.2.2:3000";
+
+    private boolean started = false;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +75,7 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         configTitle(intent);
         configSendButton();
+        start();
 
 
 
@@ -99,29 +106,29 @@ public class ChatRoomActivity extends AppCompatActivity {
         HashMap<String, String> map = new HashMap<>();
         map.put("chatName", chat.getName());
 
-        Call<ArrayList<ReceiveMsgFromChatResult>> call = retrofitInterface.executeReceiveMsgFromChatRoom(map);
+        Call<ArrayMsgsFromChatResult> call = retrofitInterface.executeReceiveMsgFromChatRoom(map);
 
-        Log.i("receive msgs response", "hello");
-
-
-        call.enqueue(new Callback<ArrayList<ReceiveMsgFromChatResult>>() {
+        call.enqueue(new Callback<ArrayMsgsFromChatResult>() {
             @Override
-            public void onResponse(Call<ArrayList<ReceiveMsgFromChatResult>> call, Response<ArrayList<ReceiveMsgFromChatResult>> response) {
+            public void onResponse(Call<ArrayMsgsFromChatResult> call, Response<ArrayMsgsFromChatResult> response) {
+
                 if (response.code() == 200) {
-                    ArrayList<ReceiveMsgFromChatResult> msgs = response.body();
+                    ArrayMsgsFromChatResult msgsResult = response.body();
+                    ArrayList<ReceiveMsgFromChatResult> msgs = msgsResult.getMsgs();
+
                     for (int i=0; i<msgs.size(); i++){
 
                         ReceiveMsgFromChatResult msg = msgs.get(i);
-                        addMsgToList(msg.getDate(), msg.getMsg(), msg.getUsername());
+                        addMsgToList(msg.getDate(), msg.getMsg(), msg.getSender());
 
-                        Log.i("receive msgs", msg.getMsg());
                     }
+                } else if(response.code() == 404){
+                    //Toast.makeText(getActivity(), "No chats error", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<ArrayList<ReceiveMsgFromChatResult>> call, Throwable t) {
-
+            public void onFailure(Call<ArrayMsgsFromChatResult> call, Throwable t) {
             }
         });
     }
@@ -159,22 +166,18 @@ public class ChatRoomActivity extends AppCompatActivity {
                 else{
                     sendMsgToServer(msg);
                 }
-
             }
         });
-
     }
 
     public void sendMsgToServer(String msg) {
         HashMap<String, String> map = new HashMap<>();
 
-        map.put("user", user.getName());
+        map.put("user", user.getUsername());
         map.put("msg", msg);
         map.put("chatName", chat.getName());
 
         Call<SendMsgResult> call = retrofitInterface.executeSendMsgToChatRoom(map);
-
-        Log.i("send msg response", "hello");
 
 
         call.enqueue(new Callback<SendMsgResult>() {
@@ -182,8 +185,7 @@ public class ChatRoomActivity extends AppCompatActivity {
             public void onResponse( Call<SendMsgResult> call, Response<SendMsgResult> response) {
                 if (response.code() == 200) {
                     String date = response.body().getDate();
-                    Log.i("send msg response", date);
-                    addMsgToList(date, msg, user.getName());
+                    addMsgToList(date, msg, user.getUsername());
                 }
             }
 
@@ -196,9 +198,32 @@ public class ChatRoomActivity extends AppCompatActivity {
 
     public void addMsgToList (String date, String msg, String userName) {
         Message newMsg = new Message(msg, userName, date, date);
-        messagesArray.add(newMsg);
-        chat.addMsg(newMsg);
-        msgsAdapter.notifyDataSetChanged();
+        //verify if msg is already in array
+        if(!messagesArray.contains(newMsg)) {
+            messagesArray.add(newMsg);
+            chat.addMsg(newMsg);
+            msgsAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if(started) {
+                getMsgFromUser();
+                start();
+            }
+        }
+    };
+
+    public void stop() {
+        started = false;
+        handler.removeCallbacks(runnable);
+    }
+
+    public void start() {
+        started = true;
+        handler.postDelayed(runnable, 1000);
     }
 
 

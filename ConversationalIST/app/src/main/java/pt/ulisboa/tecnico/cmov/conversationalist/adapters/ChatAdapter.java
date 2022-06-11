@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmov.conversationalist.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,9 @@ public class ChatAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemViewType(int position) {
         Message msg = (Message) messageList.get(position);
+        Log.i("Chat Adapter user msg", msg.getSender());
+        Log.i("Chat Adapter user", user.getUsername());
+
 
         if (msg.getSender().equals(user.getUsername())) {
             return VIEW_TYPE_MESSAGE_SENT;
@@ -99,15 +103,13 @@ public class ChatAdapter extends RecyclerView.Adapter {
 
     private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
         TextView messageText, timeText, nameText;
-        ImageView profileImage;
 
         ReceivedMessageHolder(View itemView) {
             super(itemView);
 
             messageText = (TextView) itemView.findViewById(R.id.textMessage);
             timeText = (TextView) itemView.findViewById(R.id.textDateTime);
-            //nameText = (TextView) itemView.findViewById(R.id.text_message_name);
-            profileImage = (ImageView) itemView.findViewById(R.id.imageProfile);
+            nameText = (TextView) itemView.findViewById(R.id.text_message_name);
         }
 
         void bind(Message message) {
@@ -116,10 +118,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
             // Format the stored timestamp into a readable String using method.
             timeText.setText(message.getTime());
 
-            //nameText.setText(message.getSender().getNickname());
-
-            // Insert the profile image from the URL into the ImageView.
-            //Utils.displayRoundImageFromUrl(mContext, message.getSender().getProfileUrl(), profileImage);
+            nameText.setText(message.getSender());
         }
     }
 

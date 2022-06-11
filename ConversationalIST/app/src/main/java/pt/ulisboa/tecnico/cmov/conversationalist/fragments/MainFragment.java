@@ -254,7 +254,6 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
                     for ( int i = 0; i < userChatRoomArrayList.size(); i++) {
                         SearchChatRoomResults data = userChatRoomArrayList.get(i);
                         ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription());
-                        Log.i("chat found", data.getName());
                         availableChats.add(chatroom);
                     }
 
@@ -314,7 +313,6 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 chatroom_type[0] = adapterView.getItemAtPosition(i).toString();
-                Log.i("chatroom type", chatroom_type[0]);
             }
 
             @Override
@@ -331,7 +329,6 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
             public void onClick(View view) {
                 String name = input_name.getText().toString();
                 String description = input_description.getText().toString();
-                Log.i("create chat", "estou no criar chat (early) " + availableChats.size());
                 if(name.matches("")) {
                     input_name.setError("Chat name is required");
                     return;
@@ -380,8 +377,6 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
 
         ChatRoom new_chatRoom = new ChatRoom(name, chatroom_type[0], description);
         availableChats.add(new_chatRoom);
-
-        Log.i("create chat", "estou no criar chat " + availableChats.size());
         chatListAdp.notifyItemInserted(availableChats.size()-1);
     }
 

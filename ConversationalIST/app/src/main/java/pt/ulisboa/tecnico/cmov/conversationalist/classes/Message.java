@@ -1,5 +1,7 @@
 package pt.ulisboa.tecnico.cmov.conversationalist.classes;
 
+import java.util.Objects;
+
 public class Message {
 
     private String text;
@@ -36,4 +38,18 @@ public class Message {
     public void setTime(String time) { this.time = time; }
 
     public String getSender() { return sender; }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object)
+            return true;
+        if (object == null)
+            return false;
+        if(getClass() != object.getClass())
+            return false;
+        Message o = (Message) object;
+        return Objects.equals(sender, o.getSender()) &&
+                Objects.equals(time, o.getTime()) &&
+                Objects.equals(text, o.getText());
+    }
 }
