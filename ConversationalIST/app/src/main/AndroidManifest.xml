@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
     <application
         android:allowBackup="true"
@@ -10,10 +11,9 @@
         android:usesCleartextTraffic="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ConversationalIST">
-        <activity
-            android:name=".activities.ChatRoomActivity"
-            android:exported="false" />
+        android:theme="@style/Theme.ConversationalIST"
+        android:name="io.branch.referral.BranchApp">
+
         <activity
             android:name=".activities.SignupActivity"
             android:exported="false" />
@@ -29,6 +29,44 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activities.ChatRoomActivity"
+            android:exported="true">
+
+            <!-- Branch URI Scheme -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="conversationalist"
+                    android:host="open" />
+            </intent-filter>
+
+            <!-- Branch App Links -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="cnist.app.link" android:pathPrefix="/*" />
+                <data android:scheme="http" android:host="cnist.app.link" android:pathPrefix="/*" />
+                <!-- example-alternate domain is required for App Links when the Journeys/Web SDK and Deepviews are used inside your website.  -->
+            </intent-filter>
+
+
+        </activity>
+
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_dn8LZoqdWijJOMqUOwzBJadgqrgdyFRB" />
+        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="secret_live_WuYNq94qnLleLCrt7CfLygy0YtHJ7kJ9" />
+        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />     <!-- Set to true to use Branch_Test_Key (useful when simulating installs and/or switching between debug and production flavors) -->
+
     </application>
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="text/plain" />
+        </intent>
+    </queries>
 
 </manifest>

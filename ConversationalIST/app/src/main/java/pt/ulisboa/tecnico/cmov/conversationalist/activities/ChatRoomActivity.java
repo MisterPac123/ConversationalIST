@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,11 +14,16 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatAdapter;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
@@ -30,6 +37,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+
+
 
 public class ChatRoomActivity extends AppCompatActivity {
 
@@ -50,6 +60,14 @@ public class ChatRoomActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
+
+        Uri uri = getIntent().getData();
+        if (uri != null) {
+            List<String> params = uri.getPathSegments();
+            String id = params.get(params.size()-1);
+            Toast.makeText(this, "id" + id, Toast.LENGTH_SHORT).show();
+        }
+
         recyclerView = this.findViewById(R.id.chatRecyclerView);
         if(recyclerView == null) {
             Log.i("chatRoom", "null recycleviw");
@@ -70,8 +88,32 @@ public class ChatRoomActivity extends AppCompatActivity {
         configTitle(intent);
         configSendButton();
 
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        Branch branch = Branch.getInstance();
 
+        branch.initSession(new Branch.BranchReferralInitListener(){
+            @Override
+            public void onInitFinished(JSONObject referringParams, BranchError error) {
+                if (error == null) {
+                    // params are the deep linked params associated with the link that the user clicked -> was re-directed to this app
+                    // params will be empty if no data found
+                    // ... insert custom logic here ...
+                } else {
+                    Log.i("MyApp", error.getMessage());
+                }
+            }
+        }, this.getIntent().getData(), this);
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        this.setIntent(intent);
+        intent.putExtra("branch_force_new_session", true);
     }
 
     public void initBackendConnection() {
@@ -91,7 +133,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         String date = dateFormat.format(calendar.getTime());
         String time = timeFormat.format(calendar.getTime());
         UserAccount user1 = new UserAccount("user_test", "user_test@test.com","test" );
-        Message newMsg = new Message("msg", user1.getUsername(), date, time);
+        Message newMsg = new Message("Go to this website: content://com.android.providers.downloads.documents/document/raw%3A%2Fstorage%2Femulated%2F0%2FDownload%2Ftest.html", user1.getUsername(), date, time);
         messagesArray.add(newMsg);
     }
 
