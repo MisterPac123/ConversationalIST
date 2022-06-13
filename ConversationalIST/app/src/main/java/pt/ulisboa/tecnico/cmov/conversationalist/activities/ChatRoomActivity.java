@@ -133,7 +133,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         String date = dateFormat.format(calendar.getTime());
         String time = timeFormat.format(calendar.getTime());
         UserAccount user1 = new UserAccount("user_test", "user_test@test.com","test" );
-        Message newMsg = new Message("Go to this website: content://com.android.providers.downloads.documents/document/raw%3A%2Fstorage%2Femulated%2F0%2FDownload%2Ftest.html", user1.getUsername(), date, time);
+        Message newMsg = new Message("Go to this website: https://cnist.app.link/v4", user1.getUsername(), date, time);
         messagesArray.add(newMsg);
     }
 
