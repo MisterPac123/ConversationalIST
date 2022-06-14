@@ -76,9 +76,12 @@ public class ChatRoomActivity extends AppCompatActivity {
         configTitle(intent);
         configSendButton();
         start();
+    }
 
-
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stop();
     }
 
     public void initBackendConnection() {
@@ -164,13 +167,13 @@ public class ChatRoomActivity extends AppCompatActivity {
                     Log.i("no msg", "empty msg");
                 }
                 else{
-                    sendMsgToServer(msg);
+                    sendMsgToServer(msg,editTxtMsg);
                 }
             }
         });
     }
 
-    public void sendMsgToServer(String msg) {
+    public void sendMsgToServer(String msg, EditText editTxtMsg) {
         HashMap<String, String> map = new HashMap<>();
 
         map.put("user", user.getUsername());
@@ -186,6 +189,7 @@ public class ChatRoomActivity extends AppCompatActivity {
                 if (response.code() == 200) {
                     String date = response.body().getDate();
                     addMsgToList(date, msg, user.getUsername());
+                    editTxtMsg.getText().clear();
                 }
             }
 
@@ -203,6 +207,7 @@ public class ChatRoomActivity extends AppCompatActivity {
             messagesArray.add(newMsg);
             chat.addMsg(newMsg);
             msgsAdapter.notifyDataSetChanged();
+            recyclerView.scrollToPosition(messagesArray.size()-1);
         }
     }
 

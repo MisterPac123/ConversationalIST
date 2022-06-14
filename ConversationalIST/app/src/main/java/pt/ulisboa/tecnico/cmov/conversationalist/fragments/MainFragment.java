@@ -29,6 +29,7 @@ import java.util.HashMap;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.activities.ChatRoomActivity;
+import pt.ulisboa.tecnico.cmov.conversationalist.activities.CreateChatRoomActivity;
 import pt.ulisboa.tecnico.cmov.conversationalist.activities.LoginActivity;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.RetrofitInterface;
 import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatRoomListAdp;
@@ -49,9 +50,6 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
 
     UserAccount user;
 
-    private AlertDialog dialog;
-    private AlertDialog.Builder dialogBuilder;
-    private Spinner newChatTypesSpinner;
     private ChatRoomListAdp chatListAdp;
     private ArrayList<ChatRoom> availableChats = new ArrayList<>();
     private ArrayList<SearchChatRoomResults> userChatRoomArrayList = new ArrayList<>();
@@ -116,7 +114,7 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
         newChat_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createNewChatDialog(view, parentView);
+                openCreateNewChatActivity();
             }
         });
     }
@@ -183,11 +181,6 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
                     handleSearchChatRoom(searchChatsResult);
 
 
-
-                    //chatListAdp = new ChatRoomListAdp(availableChats);
-
-                    //displayChatList(view, chatListAdp);
-
                 } else if(response.code() == 404){
                     Toast.makeText(getActivity(), "No chats error", Toast.LENGTH_LONG).show();
                 }
@@ -226,6 +219,12 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
         Intent intent = new Intent(getActivity(), ChatRoomActivity.class);
         intent.putExtra("user", user);
         intent.putExtra("chat", chat);
+        startActivity(intent);
+    }
+
+    public void openCreateNewChatActivity() {
+        Intent intent = new Intent(getActivity(), CreateChatRoomActivity.class);
+        intent.putExtra("user", user);
         startActivity(intent);
     }
 
@@ -275,115 +274,8 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
     }
 
 
-
-
-
-
-
-
-
-
-
-
-//  ########################################################################
-//  ########################## new chatroom PopUp ##########################
-//  ########################################################################
-
-    public void createNewChatDialog(View view, View parentView){
-        EditText input_name;
-        EditText input_description;
-        Button newChatButton;
-        final String[] chatroom_type = new String[1];
-
-        dialogBuilder = new AlertDialog.Builder(getActivity());
-        View newChatPopupView = getLayoutInflater().inflate(R.layout.popup_newchat, null);
-        dialogBuilder.setTitle("New ChatRoom");
-
-        input_name = newChatPopupView.findViewById(R.id.editTxtNewChatroomTitle);
-        input_description = newChatPopupView.findViewById(R.id.editTxtNewChatroomDescr);
-        newChatButton = newChatPopupView.findViewById(R.id.createNewChatroom);
-
-
-        //Spinner
-        newChatTypesSpinner = newChatPopupView.findViewById(R.id.chatTypesSpinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.chatroom_types, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        newChatTypesSpinner.setAdapter(adapter);
-        newChatTypesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                chatroom_type[0] = adapterView.getItemAtPosition(i).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        dialogBuilder.setView(newChatPopupView);
-        dialog = dialogBuilder.create();
-
-        newChatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String name = input_name.getText().toString();
-                String description = input_description.getText().toString();
-                if(name.matches("")) {
-                    input_name.setError("Chat name is required");
-                    return;
-                }
-
-                else if (!newChatTypesSpinner.getSelectedItem().toString().equalsIgnoreCase("Chat type…")) {
-                    createNewChat(name, description, chatroom_type);
-                    dialog.dismiss();
-
-                }
-                verifyChatListEmpty(parentView);
-            }
-        });
-
-        dialog.show();
-    }
-
-    private void createNewChat(String name, String description , String[] chatroom_type) {
-        HashMap<String, String> map = new HashMap<>();
-
-        map.put("name", name);
-        map.put("type", chatroom_type[0]);
-        map.put("description", description);
-        map.put("admin", user.getUsername());
-
-        Call<Void> call = retrofitInterface.executeCreateNewChat(map);
-
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-
-                if (response.code() == 200) {
-                    Toast.makeText(getContext(), "ChatRoom added successfully", Toast.LENGTH_LONG).show();
-                } else if (response.code() == 400) {
-                    Toast.makeText(getContext(), "Name already exists", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-
-
-
-        ChatRoom new_chatRoom = new ChatRoom(name, chatroom_type[0], description);
-        availableChats.add(new_chatRoom);
-        chatListAdp.notifyItemInserted(availableChats.size()-1);
-    }
-
-
     @Override
     public void onClick(View view, int position) {
-        Toast t = Toast.makeText(getContext(), "hello", Toast.LENGTH_LONG);
         ChatRoom chat = availableChats.get(position);
         openChatRoom(chat);
     }
