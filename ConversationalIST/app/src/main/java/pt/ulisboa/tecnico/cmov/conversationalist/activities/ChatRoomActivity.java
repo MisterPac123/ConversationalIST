@@ -22,8 +22,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import io.branch.referral.Branch;
-import io.branch.referral.BranchError;
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatAdapter;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
@@ -76,6 +74,11 @@ public class ChatRoomActivity extends AppCompatActivity {
         if(intent != null) {
             //error
         }
+
+        Intent intent2 = getIntent();
+        String action = intent2.getAction();
+        Uri data = intent2.getData();
+
         user = (UserAccount) intent.getSerializable("user");
         chat = (ChatRoom) intent.getSerializable("chat");
 
@@ -88,32 +91,6 @@ public class ChatRoomActivity extends AppCompatActivity {
         configTitle(intent);
         configSendButton();
 
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Branch branch = Branch.getInstance();
-
-        branch.initSession(new Branch.BranchReferralInitListener(){
-            @Override
-            public void onInitFinished(JSONObject referringParams, BranchError error) {
-                if (error == null) {
-                    // params are the deep linked params associated with the link that the user clicked -> was re-directed to this app
-                    // params will be empty if no data found
-                    // ... insert custom logic here ...
-                } else {
-                    Log.i("MyApp", error.getMessage());
-                }
-            }
-        }, this.getIntent().getData(), this);
-    }
-
-    @Override
-    public void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        this.setIntent(intent);
-        intent.putExtra("branch_force_new_session", true);
     }
 
     public void initBackendConnection() {
@@ -133,7 +110,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         String date = dateFormat.format(calendar.getTime());
         String time = timeFormat.format(calendar.getTime());
         UserAccount user1 = new UserAccount("user_test", "user_test@test.com","test" );
-        Message newMsg = new Message("Go to this website: https://cnist.app.link/v4", user1.getUsername(), date, time);
+        Message newMsg = new Message("Go to this website: https://live.conversationalist.com/app", user1.getUsername(), date, time);
         messagesArray.add(newMsg);
     }
 

@@ -11,8 +11,7 @@
         android:usesCleartextTraffic="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ConversationalIST"
-        android:name="io.branch.referral.BranchApp">
+        android:theme="@style/Theme.ConversationalIST">
 
         <activity
             android:name=".activities.SignupActivity"
@@ -34,39 +33,27 @@
             android:name=".activities.ChatRoomActivity"
             android:exported="true">
 
-            <!-- Branch URI Scheme -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="conversationalist"
-                    android:host="open" />
+                    <!-- Accepts URIs that begin with "http://www.conversationalist.com/gizmos” -->
+                    <data android:scheme="http"
+                        android:host="www.conversationalist.com"
+                        android:pathPrefix="/gizmos" />
+                    <!-- note that the leading "/" is required for pathPrefix-->
             </intent-filter>
-
-            <!-- Branch App Links -->
             <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="cnist.app.link" android:pathPrefix="/*" />
-                <data android:scheme="http" android:host="cnist.app.link" android:pathPrefix="/*" />
-                <!-- example-alternate domain is required for App Links when the Journeys/Web SDK and Deepviews are used inside your website.  -->
+                    <action android:name="android.intent.action.VIEW" />
+                    <category android:name="android.intent.category.DEFAULT" />
+                    <category android:name="android.intent.category.BROWSABLE" />
+                    <!-- Accepts URIs that begin with "conversationalist://gizmos” -->
+                    <data android:scheme="conversationalist"
+                        android:host="gizmos" />
             </intent-filter>
-
 
         </activity>
 
-        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_dn8LZoqdWijJOMqUOwzBJadgqrgdyFRB" />
-        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="secret_live_WuYNq94qnLleLCrt7CfLygy0YtHJ7kJ9" />
-        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />     <!-- Set to true to use Branch_Test_Key (useful when simulating installs and/or switching between debug and production flavors) -->
-
     </application>
-
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.SEND" />
-            <data android:mimeType="text/plain" />
-        </intent>
-    </queries>
 
 </manifest>
