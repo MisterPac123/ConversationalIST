@@ -124,15 +124,31 @@ public class CreateChatRoomActivity extends AppCompatActivity {
 
     private void configureSpinner() {
         newChatTypesSpinner = findViewById(R.id.chatTypesSpinner);
+        Button button = findViewById(R.id.pickLocation);
+        EditText edittxt = findViewById(R.id.radiusEditText);
+        TextView txt = findViewById(R.id.coordinatesTextView);
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.chatroom_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         newChatTypesSpinner.setAdapter(adapter);
+
         newChatTypesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 chatroom_type = adapterView.getItemAtPosition(i).toString();
+                if (chatroom_type.matches("Geo-fenced")){
+                    button.setVisibility(View.VISIBLE);
+                    edittxt.setVisibility(View.VISIBLE);
+                    txt.setVisibility(View.VISIBLE);
+                }
+                else{
+                    button.setVisibility(View.INVISIBLE);
+                    edittxt.setVisibility(View.INVISIBLE);
+                    txt.setVisibility(View.INVISIBLE);
+                }
+
             }
 
             @Override
@@ -185,7 +201,7 @@ public class CreateChatRoomActivity extends AppCompatActivity {
 
         if(chatroom_type.matches("Public"))
             createNewPublicChatRoom(map);
-        else if(chatroom_type.matches("Geo-founder"))
+        else if(chatroom_type.matches("Geo-fenced"))
             createNewGeoChatRoom(map);
         else
             Log.i("createchat","no type found:" + chatroom_type);
@@ -215,6 +231,7 @@ public class CreateChatRoomActivity extends AppCompatActivity {
 
 
     public void createNewGeoChatRoom(HashMap<String, String> map) {
+
         map.put("coordinates", address[0] + " " + address[1]);
         Call<Void> call = retrofitInterface.executeCreateNewGeoChat(map);
 

@@ -47,7 +47,7 @@
         android:id="@+id/createNewChatroom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="52dp"
         android:text="Create"
         app:layout_constraintEnd_toEndOf="@+id/chatTypesSpinner"
         app:layout_constraintTop_toBottomOf="@+id/editTxtNewChatroomDescr" />
@@ -58,20 +58,35 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
         android:text="Pick Location"
-        app:layout_constraintEnd_toEndOf="@+id/createNewChatroom"
-        app:layout_constraintHorizontal_bias="0.551"
-        app:layout_constraintStart_toStartOf="@+id/createNewChatroom"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/createNewChatroom" />
 
     <TextView
         android:id="@+id/coordinatesTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/pickLocation"
-        app:layout_constraintEnd_toStartOf="@+id/pickLocation"
+        android:layout_marginTop="28dp"
+        android:text="Location:"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/pickLocation"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="@+id/pickLocation"
+        app:layout_constraintTop_toBottomOf="@+id/pickLocation" />
+
+    <EditText
+        android:id="@+id/radiusEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Radius (m)"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/pickLocation" />
+        app:layout_constraintTop_toBottomOf="@+id/coordinatesTextView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
