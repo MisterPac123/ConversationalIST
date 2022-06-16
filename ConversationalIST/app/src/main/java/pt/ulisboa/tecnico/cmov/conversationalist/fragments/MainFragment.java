@@ -240,6 +240,14 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
 
         map.put("username", user.getUsername());
 
+        availableChats = new ArrayList<>();
+
+        getUserPublicChatRooms(map);
+        getUserGeoChatRooms(map);
+
+    }
+
+    public void getUserPublicChatRooms(HashMap<String, String> map) {
         Call<ArrayList<SearchChatRoomResults>> call = retrofitInterface.executeGetUserChatRoom(map);
 
         call.enqueue(new Callback<ArrayList<SearchChatRoomResults>>() {
@@ -248,12 +256,11 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
 
                 if (response.code() == 200){
 
-                    availableChats = new ArrayList<>();
                     userChatRoomArrayList = response.body();
                     for ( int i = 0; i < userChatRoomArrayList.size(); i++) {
                         SearchChatRoomResults data = userChatRoomArrayList.get(i);
                         ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription());
-                        availableChats.add(chatroom);
+                        addChatToArray(chatroom);
                     }
 
                     chatListAdp = new ChatRoomListAdp(availableChats);
@@ -271,6 +278,44 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    public void getUserGeoChatRooms(HashMap<String, String> map) {
+        Call<ArrayList<SearchChatRoomResults>> call = retrofitInterface.executeGetUserGeoChatRoom(map);
+
+        call.enqueue(new Callback<ArrayList<SearchChatRoomResults>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SearchChatRoomResults>> call, Response<ArrayList<SearchChatRoomResults>> response) {
+
+                if (response.code() == 200){
+
+                    userChatRoomArrayList = response.body();
+                    for ( int i = 0; i < userChatRoomArrayList.size(); i++) {
+                        SearchChatRoomResults data = userChatRoomArrayList.get(i);
+                        ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription());
+                        addChatToArray(chatroom);
+                    }
+
+                    chatListAdp = new ChatRoomListAdp(availableChats);
+
+                    displayChatList(view, chatListAdp);
+
+                } else if(response.code() == 404){
+                    Toast.makeText(getActivity(), "No chats error", Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<SearchChatRoomResults>> call, Throwable t) {
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void addChatToArray(ChatRoom chatRoom) {
+        if(!availableChats.contains(chatRoom))
+            availableChats.add(chatRoom);
     }
 
 

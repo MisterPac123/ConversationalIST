@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.Message;
 
@@ -57,6 +58,20 @@ public class ChatRoom implements Serializable {
 
     public void addMsg(Message msg) {
         this.msgList.add(msg);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object)
+            return true;
+        if (object == null)
+            return false;
+        if(getClass() != object.getClass())
+            return false;
+        ChatRoom o = (ChatRoom) object;
+        return Objects.equals(name, o.getName()) &&
+                Objects.equals(type, o.getType()) &&
+                Objects.equals(description, o.getDescription());
     }
 
 }

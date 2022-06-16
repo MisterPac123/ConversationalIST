@@ -36,6 +36,9 @@ public interface RetrofitInterface {
     @POST("/chatRooms/getUserChatRooms")
     Call<ArrayList<SearchChatRoomResults>> executeGetUserChatRoom(@Body HashMap<String, String> map);
 
+    @POST("/chatRooms/getUserGeoChatRooms")
+    Call<ArrayList<SearchChatRoomResults>> executeGetUserGeoChatRoom(@Body HashMap<String, String> map);
+
     @POST("/chatRooms/addUserToChatRoom")
     Call<SearchChatRoomResults> executeAddUserToRoom(@Body HashMap<String, String> map);
 
