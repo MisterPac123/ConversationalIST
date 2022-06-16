@@ -26,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -55,6 +56,8 @@ public class CreateChatRoomActivity extends AppCompatActivity {
     private boolean permissionDenied = false;
     private int PLACE_PICKER_REQUEST = 1;
     private final static int MY_REQUEST_CODE = 1;
+
+    Geocoder geocoder;
 
     private String[] address;
 
@@ -106,7 +109,9 @@ public class CreateChatRoomActivity extends AppCompatActivity {
                         //data.getExtras();
                         address =  data.getStringArrayExtra("address");
                         Log.i("address", address[0] + " " + address[1]);
-                        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+                        geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+                        TextView coordinatesTV = findViewById(R.id.coordinatesTextView);
+                        coordinatesTV.setText(address[0] + " " + address[1]);
                         try {
                             geocoder.getFromLocation(Double.parseDouble(address[0]), Double.parseDouble(address[1]), 1).get(0);
                         } catch (IOException e) {
@@ -178,7 +183,40 @@ public class CreateChatRoomActivity extends AppCompatActivity {
         map.put("description", description);
         map.put("admin", user.getUsername());
 
+        if(chatroom_type.matches("Public"))
+            createNewPublicChatRoom(map);
+        else if(chatroom_type.matches("Geo-founder"))
+            createNewGeoChatRoom(map);
+        else
+            Log.i("createchat","no type found:" + chatroom_type);
+    }
+
+    public void createNewPublicChatRoom(HashMap<String, String> map) {
         Call<Void> call = retrofitInterface.executeCreateNewChat(map);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                if (response.code() == 200) {
+                    Toast.makeText(getApplicationContext(), "ChatRoom added successfully", Toast.LENGTH_LONG).show();
+                    finish();
+                } else if (response.code() == 400) {
+                    Toast.makeText(getApplicationContext(), "Name already exists", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
+    public void createNewGeoChatRoom(HashMap<String, String> map) {
+        map.put("coordinates", address[0] + " " + address[1]);
+        Call<Void> call = retrofitInterface.executeCreateNewGeoChat(map);
 
         call.enqueue(new Callback<Void>() {
             @Override

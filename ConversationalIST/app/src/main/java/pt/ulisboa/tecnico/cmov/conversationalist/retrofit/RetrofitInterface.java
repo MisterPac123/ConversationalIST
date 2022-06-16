@@ -27,6 +27,9 @@ public interface RetrofitInterface {
     @POST("/chatRooms/NewChatRoom")
     Call<Void> executeCreateNewChat(@Body HashMap<String, String> map);
 
+    @POST("/chatRooms/NewGeoChatRoom")
+    Call<Void> executeCreateNewGeoChat(@Body HashMap<String, String> map);
+
     @POST("/chatRooms/searchChatRoom")
     Call<ArrayList<SearchChatRoomResults>> executeSearchChatRoom(@Body HashMap<String, String> map);
 
