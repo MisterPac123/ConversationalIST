@@ -1,20 +1,14 @@
 package pt.ulisboa.tecnico.cmov.conversationalist.fragments;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.SearchView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,21 +17,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.activities.ChatRoomActivity;
 import pt.ulisboa.tecnico.cmov.conversationalist.activities.CreateChatRoomActivity;
-import pt.ulisboa.tecnico.cmov.conversationalist.activities.LoginActivity;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.RetrofitInterface;
 import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatRoomListAdp;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoom;
-import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.LoginResult;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.SearchChatRoomResults;
-import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.UserChatRoomsResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,7 +36,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickListener {
 
-    View view;
+    private View view;
 
     UserAccount user;
 
@@ -136,8 +126,8 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
 
 
 
-        ImageButton searchChatRoomBt = parentView.findViewById(R.id.searchChatRoomButton);
-        EditText searchChatRoomEt = parentView.findViewById(R.id.searchChatRoomEditText);
+        ImageButton searchChatRoomBt = parentView.findViewById(R.id.searchChatRoomBtn);
+        EditText searchChatRoomEt = parentView.findViewById(R.id.searchChatRoomET);
         searchChatRoomBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,59 +137,12 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
                      toast.show();
                 }
                 else{
-                    getSearchChatRoomBackend(name);
+                    //search in list?
                 }
             }
         });
     }
 
-
-
-    public void getSearchChatRoomBackend(String name) {
-        HashMap<String, String> map = new HashMap<>();
-
-        map.put("chatName", name);
-
-        Call<ArrayList<SearchChatRoomResults>> call = retrofitInterface.executeSearchChatRoom(map);
-
-        call.enqueue(new Callback<ArrayList<SearchChatRoomResults>>() {
-            @Override
-            public void onResponse(Call<ArrayList<SearchChatRoomResults>> call, Response<ArrayList<SearchChatRoomResults>> response) {
-
-                if (response.code() == 200){
-
-                    ArrayList <ChatRoom> searchChatsResult = new ArrayList<>();
-                    searchChatRoomArrayList = response.body();
-                    for ( int i = 0; i < searchChatRoomArrayList.size(); i++) {
-                        SearchChatRoomResults data = searchChatRoomArrayList.get(i);
-                        ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription());
-                        Log.i("chat found", data.getName());
-                        searchChatsResult.add(chatroom);
-
-                    }
-
-                    handleSearchChatRoom(searchChatsResult);
-
-
-                } else if(response.code() == 404){
-                    Toast.makeText(getActivity(), "No chats error", Toast.LENGTH_LONG).show();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<SearchChatRoomResults>> call, Throwable t) {
-                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    public void handleSearchChatRoom(ArrayList<ChatRoom> chatRoomsList){
-
-        SearchFragmentDialog dialog = new SearchFragmentDialog(chatRoomsList, retrofitInterface, user.getUsername());
-        dialog.setTargetFragment(this, 1);
-        dialog.show(getActivity().getSupportFragmentManager(), "FragmentDialog");
-    }
 
     public void displayChatList(View view, ChatRoomListAdp chatListAdp ) {
 

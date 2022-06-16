@@ -5,8 +5,6 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -14,6 +12,7 @@ import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
 import pt.ulisboa.tecnico.cmov.conversationalist.fragments.MainFragment;
 import pt.ulisboa.tecnico.cmov.conversationalist.fragments.ProfileFragment;
+import pt.ulisboa.tecnico.cmov.conversationalist.fragments.SearchChatRoomsFragment;
 
 public class MainActivity extends AppCompatActivity  implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -21,8 +20,9 @@ public class MainActivity extends AppCompatActivity  implements BottomNavigation
     UserAccount user;
     Bundle bundle;
 
-    MainFragment firstFragment = new MainFragment();
-    ProfileFragment secondFragment = new ProfileFragment();
+    MainFragment mainFragmentNav = new MainFragment();
+    ProfileFragment profileFragmentNav = new ProfileFragment();
+    SearchChatRoomsFragment searchFragmentNav = new SearchChatRoomsFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity  implements BottomNavigation
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.setSelectedItemId(R.id.person);
+        bottomNavigationView.setSelectedItemId(R.id.home);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity  implements BottomNavigation
         //fragmentTransaction.commit();
         bundle = new Bundle();
         bundle.putSerializable("user", user);
-        firstFragment.setArguments(bundle);
-
+        mainFragmentNav.setArguments(bundle);
+        searchFragmentNav.setArguments(bundle);
     }
 
 
@@ -55,13 +55,18 @@ public class MainActivity extends AppCompatActivity  implements BottomNavigation
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.person:
-                firstFragment.setArguments(bundle);
-                getSupportFragmentManager().beginTransaction().replace(R.id.mainScreenFragm, firstFragment).commit();
+            case R.id.home:
+                mainFragmentNav.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.mainScreenFragm, mainFragmentNav).commit();
                 return true;
 
-            case R.id.home:
-                getSupportFragmentManager().beginTransaction().replace(R.id.mainScreenFragm, secondFragment).commit();
+            case R.id.seachChat:
+                searchFragmentNav.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.mainScreenFragm, searchFragmentNav).commit();
+                return true;
+
+            case R.id.person:
+                getSupportFragmentManager().beginTransaction().replace(R.id.mainScreenFragm, profileFragmentNav).commit();
                 return true;
         }
 
