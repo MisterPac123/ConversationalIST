@@ -45,8 +45,6 @@ public class LoginActivity extends AppCompatActivity {
         configLoginButton();
         configSignupButton();
 
-
-
     }
     private void configLoginButton(){
 

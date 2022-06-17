@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Random;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.Message;
 
@@ -11,6 +12,7 @@ public class ChatRoom implements Serializable {
     private ChatRoomTypes type;
     private String description;
     private ArrayList<Message> msgList;
+    private String inviteLink;
 
     /*public ChatRoom(String _name, String _type) {
         name = _name;
@@ -21,10 +23,25 @@ public class ChatRoom implements Serializable {
         else if(_type.matches("Geo-founder"))
             type =  ChatRoomTypes.GEOFOUNDER;
     }*/
+
     public ChatRoom(String _name, String _type, String _description) {
         name = _name;
         description = _description;
         msgList = new ArrayList<>();
+        inviteLink = "";
+        if(_type.matches("Public"))
+            type =  ChatRoomTypes.PUBLIC;
+        else if(_type.matches("Private"))
+            type =  ChatRoomTypes.PRIVATE;
+        else if(_type.matches("Geo-founder"))
+            type =  ChatRoomTypes.GEOFOUNDER;
+    }
+
+    public ChatRoom(String _name, String _type, String _description, String _inviteLink) {
+        name = _name;
+        description = _description;
+        msgList = new ArrayList<>();
+        inviteLink = _inviteLink;
         if(_type.matches("Public"))
             type =  ChatRoomTypes.PUBLIC;
         else if(_type.matches("Private"))
@@ -59,4 +76,11 @@ public class ChatRoom implements Serializable {
         this.msgList.add(msg);
     }
 
+    public String getInviteLink() {
+        return inviteLink;
+    }
+
+    public void setInviteLink(String inviteLink) {
+        this.inviteLink = inviteLink;
+    }
 }

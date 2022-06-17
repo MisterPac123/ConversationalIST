@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.conversationalist.fragments;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
 import android.util.Log;
@@ -26,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.activities.ChatRoomActivity;
@@ -93,6 +95,7 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
         getUserChatRooms(view);
     }
 
+
     public void initBackendConnection() {
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -136,8 +139,6 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
             }
         });*/
 
-
-
         ImageButton searchChatRoomBt = parentView.findViewById(R.id.searchChatRoomButton);
         EditText searchChatRoomEt = parentView.findViewById(R.id.searchChatRoomEditText);
         searchChatRoomBt.setOnClickListener(new View.OnClickListener() {
@@ -177,21 +178,15 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
                         ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription());
                         Log.i("chat found", data.getName());
                         searchChatsResult.add(chatroom);
-
                     }
 
                     handleSearchChatRoom(searchChatsResult);
-
-
-
                     //chatListAdp = new ChatRoomListAdp(availableChats);
-
                     //displayChatList(view, chatListAdp);
 
                 } else if(response.code() == 404){
                     Toast.makeText(getActivity(), "No chats error", Toast.LENGTH_LONG).show();
                 }
-
             }
 
             @Override
@@ -253,7 +248,7 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
                     userChatRoomArrayList = response.body();
                     for ( int i = 0; i < userChatRoomArrayList.size(); i++) {
                         SearchChatRoomResults data = userChatRoomArrayList.get(i);
-                        ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription());
+                        ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription(), data.getInviteLink());
                         availableChats.add(chatroom);
                     }
 
@@ -273,16 +268,6 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
             }
         });
     }
-
-
-
-
-
-
-
-
-
-
 
 
 //  ########################################################################
@@ -346,6 +331,18 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
         dialog.show();
     }
 
+    public static String getRandomString(int i){
+        final String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJOKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder result = new StringBuilder();
+        while (i > 0){
+            Random rand = new Random();
+            result.append(characters.charAt(rand.nextInt(characters.length())));
+            i--;
+        }
+
+        return result.toString();
+    }
+
     private void createNewChat(String name, String description , String[] chatroom_type) {
         HashMap<String, String> map = new HashMap<>();
 
@@ -353,6 +350,8 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
         map.put("type", chatroom_type[0]);
         map.put("description", description);
         map.put("admin", user.getUsername());
+        String inviteLink = "http://www.conversationalist.com/gizmos/" + getRandomString(9);
+        map.put("inviteLink", inviteLink);
 
         Call<Void> call = retrofitInterface.executeCreateNewChat(map);
 
@@ -375,7 +374,7 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
 
 
 
-        ChatRoom new_chatRoom = new ChatRoom(name, chatroom_type[0], description);
+        ChatRoom new_chatRoom = new ChatRoom(name, chatroom_type[0], description, inviteLink);
         availableChats.add(new_chatRoom);
         chatListAdp.notifyItemInserted(availableChats.size()-1);
     }

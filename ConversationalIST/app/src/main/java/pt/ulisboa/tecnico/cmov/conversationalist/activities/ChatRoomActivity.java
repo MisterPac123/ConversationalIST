@@ -4,10 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -67,6 +73,10 @@ public class ChatRoomActivity extends AppCompatActivity {
         user = (UserAccount) intent.getSerializable("user");
         chat = (ChatRoom) intent.getSerializable("chat");
 
+        Log.i("name", chat.getName());
+        Log.i("description", chat.getDescription());
+        Log.i("inviteLink", chat.getInviteLink());
+
         initBackendConnection();
         populatemsgArray();
         getMsgFromUser();
@@ -75,10 +85,16 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         configTitle(intent);
         configSendButton();
+
+        //getCurrentUser();
         start();
+        configInviteLinkButton();
+    }
 
-
-
+    private void getCurrentUser() {
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        Uri data = intent.getData() ;
     }
 
     public void initBackendConnection() {
@@ -138,13 +154,25 @@ public class ChatRoomActivity extends AppCompatActivity {
         msgsAdapter = new ChatAdapter(this, messagesArray, user);
         recyclerView.setAdapter(msgsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
     }
 
 
     public void configTitle(Bundle intent) {
         TextView title = this.findViewById(R.id.textName);
         title.setText(chat.getName());
+    }
+
+    public void configInviteLinkButton() {
+        Button sendButton = this.findViewById(R.id.clipboard);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Invite Link", chat.getInviteLink());
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(ChatRoomActivity.this, "Copied to clipboard", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public void configSendButton() {

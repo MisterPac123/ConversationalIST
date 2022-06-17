@@ -5,6 +5,7 @@ public class SearchChatRoomResults {
     private String name;
     private String type;
     private String description;
+    private String inviteLink;
 
 
     public String getName() {
@@ -29,5 +30,13 @@ public class SearchChatRoomResults {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getInviteLink() {
+        return inviteLink;
+    }
+
+    public void setInviteLink(String inviteLink) {
+        this.inviteLink = inviteLink;
     }
 }

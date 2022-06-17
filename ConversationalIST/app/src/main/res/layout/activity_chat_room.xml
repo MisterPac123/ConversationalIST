@@ -116,5 +116,16 @@
 
     </EditText>
 
+    <Button
+        android:id="@+id/clipboard"
+        android:layout_width="102dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="288dp"
+        android:layout_marginTop="8dp"
+        android:text="Invite Link"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
