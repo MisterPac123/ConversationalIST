@@ -5,6 +5,7 @@ public class ReceiveMsgFromChatResult {
     private String msg;
     private String sender;
     private String date;
+    private String type;
 
     public String getMsg() {
         return msg;
@@ -22,5 +23,13 @@ public class ReceiveMsgFromChatResult {
 
     public void setSender(String sender) {
         this.sender = sender;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

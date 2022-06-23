@@ -8,14 +8,23 @@ public class Message {
     private String sender;
     private String date;
     private String time;
+    private String type;
 
-    public Message (String _msg, String user, String _date, String _time) {
+    public Message (String _msg, String user, String _date, String _time, String _type) {
         text = _msg;
         sender = user;
         date = _date;
         time = _time;
+        type = _type;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public void setSender(String sender) {
         this.sender = sender;
@@ -50,6 +59,7 @@ public class Message {
         Message o = (Message) object;
         return Objects.equals(sender, o.getSender()) &&
                 Objects.equals(time, o.getTime()) &&
-                Objects.equals(text, o.getText());
+                Objects.equals(text, o.getText()) &&
+                Objects.equals(type, o.getType());
     }
 }

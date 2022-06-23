@@ -1,5 +1,7 @@
 package pt.ulisboa.tecnico.cmov.conversationalist.activities;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -7,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -83,8 +87,10 @@ public class ChatRoomActivity extends AppCompatActivity {
         populatemsgArray();
         configTitle(intent);
         configSendButton();
+        configShareButton();
         configInviteLinkButton();
         getMsgFromUser();
+
 
         displayMsgs();
         start();
@@ -110,7 +116,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         String date = dateFormat.format(calendar.getTime());
         String time = timeFormat.format(calendar.getTime());
         UserAccount user1 = new UserAccount("user_test", "user_test@test.com","test" );
-        Message newMsg = new Message("msg", user1.getUsername(), date, time);
+        Message newMsg = new Message("msg", user1.getUsername(), date, time, "TEXT");
         messagesArray.add(newMsg);
     }
 
@@ -174,7 +180,7 @@ public class ChatRoomActivity extends AppCompatActivity {
                     for (int i=0; i<msgs.size(); i++){
 
                         ReceiveMsgFromChatResult msg = msgs.get(i);
-                        addMsgToList(msg.getDate(), msg.getMsg(), msg.getSender());
+                        addMsgToList(msg.getDate(), msg.getMsg(), msg.getSender(), msg.getType());
 
                     }
                 } else if(response.code() == 404){
@@ -216,6 +222,33 @@ public class ChatRoomActivity extends AppCompatActivity {
         });
     }
 
+    public void configShareButton(){
+        ImageButton sendButton = this.findViewById(R.id.share_menu_btn);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText editTxtMsg = findViewById(R.id.editTxtTypemsg);
+                String msg = editTxtMsg.getText().toString();
+
+                if(msg.matches("")){
+                    //empty msg. dont send nothing
+                    CharSequence text = "Empty msg";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+                    toast.show();
+                    Log.i("no msg", "empty msg");
+                }
+                else{
+                    Intent myIntent = new Intent(Intent.ACTION_SEND);
+                    myIntent.setType("text/plain");
+                    myIntent.putExtra(Intent.EXTRA_TEXT, msg);
+                    startActivity(Intent.createChooser(myIntent, "Share using"));
+
+                }
+            }
+        });
+    }
+
     public void configSendButton() {
         ImageButton sendButton = this.findViewById(R.id.sendButton);
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -233,18 +266,19 @@ public class ChatRoomActivity extends AppCompatActivity {
                     Log.i("no msg", "empty msg");
                 }
                 else{
-                    sendMsgToServer(msg);
+                    sendMsgToServer(msg, "TEXT");
                 }
             }
         });
     }
 
-    public void sendMsgToServer(String msg) {
+    public void sendMsgToServer(String msg, String type) {
         HashMap<String, String> map = new HashMap<>();
 
         map.put("user", user.getUsername());
         map.put("msg", msg);
         map.put("chatName", chat.getName());
+        map.put("type", type);
 
         Call<SendMsgResult> call = retrofitInterface.executeSendMsgToChatRoom(map);
 
@@ -254,7 +288,7 @@ public class ChatRoomActivity extends AppCompatActivity {
             public void onResponse( Call<SendMsgResult> call, Response<SendMsgResult> response) {
                 if (response.code() == 200) {
                     String date = response.body().getDate();
-                    addMsgToList(date, msg, user.getUsername());
+                    addMsgToList(date, msg, user.getUsername(), type);
                 }
             }
 
@@ -265,8 +299,8 @@ public class ChatRoomActivity extends AppCompatActivity {
         });
     }
 
-    public void addMsgToList (String date, String msg, String userName) {
-        Message newMsg = new Message(msg, userName, date, date);
+    public void addMsgToList (String date, String msg, String userName, String type) {
+        Message newMsg = new Message(msg, userName, date, date, type);
         //verify if msg is already in array
         if(!messagesArray.contains(newMsg)) {
             messagesArray.add(newMsg);
