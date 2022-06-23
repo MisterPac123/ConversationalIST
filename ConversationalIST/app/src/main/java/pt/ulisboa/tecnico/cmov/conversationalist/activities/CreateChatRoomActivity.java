@@ -161,7 +161,7 @@ public class CreateChatRoomActivity extends AppCompatActivity {
     private void configureCreateChatRoomButton() {
         Button newChatRoom = findViewById(R.id.createNewChatroom);
         EditText input_name = findViewById(R.id.editTxtNewChatroomTitle);
-        EditText input_description = findViewById(R.id.editTxtNewChatroomTitle);
+        EditText input_description = findViewById(R.id.editTxtNewChatroomDescr);
         newChatRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -172,7 +172,7 @@ public class CreateChatRoomActivity extends AppCompatActivity {
                     return;
                 }
                 else if(newChatTypesSpinner.getSelectedItem().toString().equalsIgnoreCase("Chat type…")){
-                    //Show error msg
+
                     return;
                 }
 
@@ -231,8 +231,11 @@ public class CreateChatRoomActivity extends AppCompatActivity {
 
 
     public void createNewGeoChatRoom(HashMap<String, String> map) {
+        EditText radius = findViewById(R.id.radiusEditText);
 
-        map.put("coordinates", address[0] + " " + address[1]);
+        map.put("latitude", address[0]);
+        map.put("longitude", address[1]);
+        map.put("radius", radius.getText().toString());
         Call<Void> call = retrofitInterface.executeCreateNewGeoChat(map);
 
         call.enqueue(new Callback<Void>() {

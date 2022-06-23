@@ -6,10 +6,8 @@ import java.util.HashMap;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.ArrayMsgsFromChatResult;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.LoginResult;
 
-import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.ReceiveMsgFromChatResult;
-import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.SearchChatRoomResults;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.ChatRoomResults;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.SendMsgResult;
-import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.UserChatRoomsResults;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -31,16 +29,19 @@ public interface RetrofitInterface {
     Call<Void> executeCreateNewGeoChat(@Body HashMap<String, String> map);
 
     @POST("/chatRooms/searchChatRoom")
-    Call<ArrayList<SearchChatRoomResults>> executeSearchChatRoom(@Body HashMap<String, String> map);
+    Call<ArrayList<ChatRoomResults>> executeSearchChatRoom(@Body HashMap<String, String> map);
 
     @POST("/chatRooms/getUserChatRooms")
-    Call<ArrayList<SearchChatRoomResults>> executeGetUserChatRoom(@Body HashMap<String, String> map);
+    Call<ArrayList<ChatRoomResults>> executeGetUserChatRoom(@Body HashMap<String, String> map);
 
     @POST("/chatRooms/getUserGeoChatRooms")
-    Call<ArrayList<SearchChatRoomResults>> executeGetUserGeoChatRoom(@Body HashMap<String, String> map);
+    Call<ArrayList<ChatRoomResults>> executeGetUserGeoChatRoom(@Body HashMap<String, String> map);
+
+    @POST("/chatRooms/readMsg")
+    Call<Void> executeReadMsg(@Body HashMap<String, String> map);
 
     @POST("/chatRooms/addUserToChatRoom")
-    Call<SearchChatRoomResults> executeAddUserToRoom(@Body HashMap<String, String> map);
+    Call<ChatRoomResults> executeAddUserToRoom(@Body HashMap<String, String> map);
 
     @POST("/chatRooms/sendMsgToChatRoom")
     Call<SendMsgResult> executeSendMsgToChatRoom(@Body HashMap<String, String> map);

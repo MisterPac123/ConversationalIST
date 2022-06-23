@@ -6,6 +6,7 @@ public class GetGeoChatRoomsResult {
     private String type;
     private String description;
     private String coordinates;
+    private String radius;
 
 
     public String getName() {
@@ -35,4 +36,8 @@ public class GetGeoChatRoomsResult {
     public String getCoordinates() {return coordinates;}
 
     public void setCoordinates(String coordinates) {this.coordinates = coordinates;}
+
+    public String getRadius() {return radius;}
+
+    public void setRadius(String radius) {this.radius = radius;}
 }

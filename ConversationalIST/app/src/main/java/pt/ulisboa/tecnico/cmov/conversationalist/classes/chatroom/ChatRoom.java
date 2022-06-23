@@ -30,8 +30,8 @@ public class ChatRoom implements Serializable {
             type =  ChatRoomTypes.PUBLIC;
         else if(_type.matches("Private"))
             type =  ChatRoomTypes.PRIVATE;
-        else if(_type.matches("Geo-founder"))
-            type =  ChatRoomTypes.GEOFOUNDER;
+        else if(_type.matches("Geo-fenced"))
+            type =  ChatRoomTypes.GEOFENCED;
     }
 
     public String getName() { return name; }
@@ -42,6 +42,17 @@ public class ChatRoom implements Serializable {
 
     public ChatRoomTypes getType() {
         return type;
+    }
+
+    public String getStringType() {
+        if(type.equals(ChatRoomTypes.PUBLIC))
+            return "Public";
+        else if(type.equals(ChatRoomTypes.PRIVATE))
+            return "Private";
+        else if(type.equals(ChatRoomTypes.GEOFENCED))
+            return "Geo-fenced";
+        else
+            return null;
     }
 
     public void setType(ChatRoomTypes type) {

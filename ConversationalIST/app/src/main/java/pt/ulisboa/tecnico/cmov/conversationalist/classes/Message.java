@@ -1,19 +1,24 @@
 package pt.ulisboa.tecnico.cmov.conversationalist.classes;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Message {
 
+    private String id;
     private String text;
     private String sender;
     private String date;
     private String time;
+    private ArrayList<String> usersRead;
 
-    public Message (String _msg, String user, String _date, String _time) {
+    public Message (String _id, String _msg, String user, String _date, String _time, ArrayList<String> _usersRead) {
+        id = _id;
         text = _msg;
         sender = user;
         date = _date;
         time = _time;
+        usersRead = _usersRead;
     }
 
 
@@ -51,5 +56,13 @@ public class Message {
         return Objects.equals(sender, o.getSender()) &&
                 Objects.equals(time, o.getTime()) &&
                 Objects.equals(text, o.getText());
+    }
+
+    public ArrayList<String> getUsersRead() {
+        return usersRead;
+    }
+
+    public String getId() {
+        return id;
     }
 }

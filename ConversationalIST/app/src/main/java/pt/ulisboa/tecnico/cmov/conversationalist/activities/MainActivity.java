@@ -10,6 +10,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
+import pt.ulisboa.tecnico.cmov.conversationalist.fragments.GeoChatroomsFragment;
 import pt.ulisboa.tecnico.cmov.conversationalist.fragments.MainFragment;
 import pt.ulisboa.tecnico.cmov.conversationalist.fragments.ProfileFragment;
 import pt.ulisboa.tecnico.cmov.conversationalist.fragments.SearchChatRoomsFragment;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity  implements BottomNavigation
     MainFragment mainFragmentNav = new MainFragment();
     ProfileFragment profileFragmentNav = new ProfileFragment();
     SearchChatRoomsFragment searchFragmentNav = new SearchChatRoomsFragment();
+    GeoChatroomsFragment geoChatroomsFragmentNav = new GeoChatroomsFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,8 @@ public class MainActivity extends AppCompatActivity  implements BottomNavigation
         bundle.putSerializable("user", user);
         mainFragmentNav.setArguments(bundle);
         searchFragmentNav.setArguments(bundle);
+        profileFragmentNav.setArguments(bundle);
+        geoChatroomsFragmentNav.setArguments(bundle);
     }
 
 
@@ -67,6 +71,10 @@ public class MainActivity extends AppCompatActivity  implements BottomNavigation
 
             case R.id.person:
                 getSupportFragmentManager().beginTransaction().replace(R.id.mainScreenFragm, profileFragmentNav).commit();
+                return true;
+
+            case R.id.geoChat:
+                getSupportFragmentManager().beginTransaction().replace(R.id.mainScreenFragm, geoChatroomsFragmentNav).commit();
                 return true;
         }
 

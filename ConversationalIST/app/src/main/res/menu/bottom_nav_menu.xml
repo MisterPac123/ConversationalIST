@@ -17,4 +17,9 @@
             android:title="Person"
             android:icon="@drawable/ic_person_foreground"/>
 
+        <item
+            android:id="@+id/geoChat"
+            android:title="GeoChatrooms"
+            android:icon="@drawable/ic_baseline_location_on_24" />
+
 </menu>

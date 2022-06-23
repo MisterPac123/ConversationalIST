@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Random;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatAdapter;
@@ -68,14 +67,50 @@ public class ChatRoomActivity extends AppCompatActivity {
         chat = (ChatRoom) intent.getSerializable("chat");
 
         initBackendConnection();
-        populatemsgArray();
-        getMsgFromUser();
+        //populatemsgArray();
+        getMsgFromChat();
 
         displayMsgs();
+        verifyReadMsgs();
 
         configTitle(intent);
         configSendButton();
         start();
+    }
+
+    private void verifyReadMsgs() {
+        Log.i("userRead", "verify read msgs");
+        for(int i=0; i < messagesArray.size(); i++){
+            Message m = messagesArray.get(i);
+            if(m.getUsersRead().contains(user.getUsername())){
+                readMsg(m.getId());
+            }
+        }
+    }
+
+    private void readMsg(String id) {
+        Log.i("userRead", "read Msg " + id);
+        HashMap<String, String> map = new HashMap<>();
+        map.put("chatName", chat.getName());
+        map.put("msgId", id);
+        map.put("chatType", chat.getStringType());
+
+        Call<Void> call = retrofitInterface.executeReadMsg(map);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.code() == 200) {
+                    Log.i("chatroom read msg", "msg read");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override
@@ -94,7 +129,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     }
 
 
-    private void populatemsgArray () {
+    /*private void populatemsgArray () {
         calendar = Calendar.getInstance();
         dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         timeFormat = new SimpleDateFormat("HH:mm:ss aaa z");
@@ -103,11 +138,12 @@ public class ChatRoomActivity extends AppCompatActivity {
         UserAccount user1 = new UserAccount("user_test", "user_test@test.com","test" );
         Message newMsg = new Message("msg", user1.getUsername(), date, time);
         messagesArray.add(newMsg);
-    }
+    }*/
 
-    private void getMsgFromUser() {
+    private void getMsgFromChat() {
         HashMap<String, String> map = new HashMap<>();
         map.put("chatName", chat.getName());
+        map.put("chatType", chat.getStringType());
 
         Call<ArrayMsgsFromChatResult> call = retrofitInterface.executeReceiveMsgFromChatRoom(map);
 
@@ -117,14 +153,22 @@ public class ChatRoomActivity extends AppCompatActivity {
 
                 if (response.code() == 200) {
                     ArrayMsgsFromChatResult msgsResult = response.body();
-                    ArrayList<ReceiveMsgFromChatResult> msgs = msgsResult.getMsgs();
+                    if(msgsResult != null) {
+                        ArrayList<ReceiveMsgFromChatResult> msgs = msgsResult.getMsgs();
 
-                    for (int i=0; i<msgs.size(); i++){
+                        for (int i = 0; i < msgs.size(); i++) {
 
-                        ReceiveMsgFromChatResult msg = msgs.get(i);
-                        addMsgToList(msg.getDate(), msg.getMsg(), msg.getSender());
+                            ReceiveMsgFromChatResult msg = msgs.get(i);
+                            ArrayList<String> users = msg.getUsersRead();
+                            Log.i("userRead", "dispList");
+                            for(int j=0; j< users.size(); j++)
+                                Log.i("userRead", users.get(j));
+                            addMsgToList(msg);
 
+                        }
                     }
+                    else
+                        Log.i("chatroom", "no msgs in server");
                 } else if(response.code() == 404){
                     //Toast.makeText(getActivity(), "No chats error", Toast.LENGTH_LONG).show();
                 }
@@ -179,6 +223,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         map.put("user", user.getUsername());
         map.put("msg", msg);
         map.put("chatName", chat.getName());
+        map.put("chatType", chat.getStringType());
 
         Call<SendMsgResult> call = retrofitInterface.executeSendMsgToChatRoom(map);
 
@@ -187,8 +232,9 @@ public class ChatRoomActivity extends AppCompatActivity {
             @Override
             public void onResponse( Call<SendMsgResult> call, Response<SendMsgResult> response) {
                 if (response.code() == 200) {
+                    Log.i("chatroom send msg", response.body().getDate());
                     String date = response.body().getDate();
-                    addMsgToList(date, msg, user.getUsername());
+                    //addMsgToList(date, msg, user.getUsername());
                     editTxtMsg.getText().clear();
                 }
             }
@@ -200,8 +246,8 @@ public class ChatRoomActivity extends AppCompatActivity {
         });
     }
 
-    public void addMsgToList (String date, String msg, String userName) {
-        Message newMsg = new Message(msg, userName, date, date);
+    public void addMsgToList (ReceiveMsgFromChatResult msg) {
+        Message newMsg = new Message(msg.getId(), msg.getMsg(), msg.getSender(), msg.getDate(), msg.getDate(), msg.getUsersRead());
         //verify if msg is already in array
         if(!messagesArray.contains(newMsg)) {
             messagesArray.add(newMsg);
@@ -215,7 +261,8 @@ public class ChatRoomActivity extends AppCompatActivity {
         @Override
         public void run() {
             if(started) {
-                getMsgFromUser();
+                getMsgFromChat();
+                verifyReadMsgs();
                 start();
             }
         }

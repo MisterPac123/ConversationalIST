@@ -1,10 +1,13 @@
 package pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results;
 
-public class SearchChatRoomResults {
+import java.util.ArrayList;
+
+public class ChatRoomResults {
 
     private String name;
     private String type;
     private String description;
+    private ArrayList<String> users;
 
 
     public String getName() {
@@ -27,7 +30,5 @@ public class SearchChatRoomResults {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public ArrayList<String> getReadUsers() {return users;}
 }

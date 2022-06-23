@@ -35,7 +35,9 @@
         <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/layout/activity_maps.xml" value="0.1" />
         <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/layout/activity_signup.xml" value="0.21693840579710144" />
         <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/layout/content_main.xml" value="0.11676798378926039" />
-        <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/layout/fragment_main.xml" value="0.4" />
+        <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/layout/fragment_geo_chatrooms.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/layout/fragment_main.xml" value="0.264" />
+        <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/layout/fragment_profile.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/layout/fragment_search_chat_rooms.xml" value="0.18297101449275363" />
         <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/layout/item_container_receiver_msg.xml" value="0.21739130434782608" />
         <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/layout/item_container_sent_msg.xml" value="0.21739130434782608" />

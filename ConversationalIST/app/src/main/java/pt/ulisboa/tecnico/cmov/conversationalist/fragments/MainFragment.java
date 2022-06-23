@@ -27,7 +27,7 @@ import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.RetrofitInterface;
 import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatRoomListAdp;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoom;
-import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.SearchChatRoomResults;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.ChatRoomResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,12 +38,12 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
 
     private View view;
 
-    UserAccount user;
+    private UserAccount user;
 
     private ChatRoomListAdp chatListAdp;
     private ArrayList<ChatRoom> availableChats = new ArrayList<>();
-    private ArrayList<SearchChatRoomResults> userChatRoomArrayList = new ArrayList<>();
-    private ArrayList<SearchChatRoomResults> searchChatRoomArrayList = new ArrayList<>();
+    private ArrayList<ChatRoomResults> userChatRoomArrayList = new ArrayList<>();
+    private ArrayList<ChatRoomResults> searchChatRoomArrayList = new ArrayList<>();
 
 
     private Retrofit retrofit;
@@ -186,22 +186,22 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
         availableChats = new ArrayList<>();
 
         getUserPublicChatRooms(map);
-        getUserGeoChatRooms(map);
+        //getUserGeoChatRooms(map);
 
     }
 
     public void getUserPublicChatRooms(HashMap<String, String> map) {
-        Call<ArrayList<SearchChatRoomResults>> call = retrofitInterface.executeGetUserChatRoom(map);
+        Call<ArrayList<ChatRoomResults>> call = retrofitInterface.executeGetUserChatRoom(map);
 
-        call.enqueue(new Callback<ArrayList<SearchChatRoomResults>>() {
+        call.enqueue(new Callback<ArrayList<ChatRoomResults>>() {
             @Override
-            public void onResponse(Call<ArrayList<SearchChatRoomResults>> call, Response<ArrayList<SearchChatRoomResults>> response) {
+            public void onResponse(Call<ArrayList<ChatRoomResults>> call, Response<ArrayList<ChatRoomResults>> response) {
 
                 if (response.code() == 200){
 
                     userChatRoomArrayList = response.body();
                     for ( int i = 0; i < userChatRoomArrayList.size(); i++) {
-                        SearchChatRoomResults data = userChatRoomArrayList.get(i);
+                        ChatRoomResults data = userChatRoomArrayList.get(i);
                         ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription());
                         addChatToArray(chatroom);
                     }
@@ -217,24 +217,24 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
             }
 
             @Override
-            public void onFailure(Call<ArrayList<SearchChatRoomResults>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<ChatRoomResults>> call, Throwable t) {
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
     public void getUserGeoChatRooms(HashMap<String, String> map) {
-        Call<ArrayList<SearchChatRoomResults>> call = retrofitInterface.executeGetUserGeoChatRoom(map);
+        Call<ArrayList<ChatRoomResults>> call = retrofitInterface.executeGetUserGeoChatRoom(map);
 
-        call.enqueue(new Callback<ArrayList<SearchChatRoomResults>>() {
+        call.enqueue(new Callback<ArrayList<ChatRoomResults>>() {
             @Override
-            public void onResponse(Call<ArrayList<SearchChatRoomResults>> call, Response<ArrayList<SearchChatRoomResults>> response) {
+            public void onResponse(Call<ArrayList<ChatRoomResults>> call, Response<ArrayList<ChatRoomResults>> response) {
 
                 if (response.code() == 200){
 
                     userChatRoomArrayList = response.body();
                     for ( int i = 0; i < userChatRoomArrayList.size(); i++) {
-                        SearchChatRoomResults data = userChatRoomArrayList.get(i);
+                        ChatRoomResults data = userChatRoomArrayList.get(i);
                         ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription());
                         addChatToArray(chatroom);
                     }
@@ -250,7 +250,7 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
             }
 
             @Override
-            public void onFailure(Call<ArrayList<SearchChatRoomResults>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<ChatRoomResults>> call, Throwable t) {
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });

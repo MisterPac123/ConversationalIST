@@ -24,7 +24,7 @@ import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatRoomListAdp;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.UserAccount;
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom.ChatRoom;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.RetrofitInterface;
-import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.SearchChatRoomResults;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.ChatRoomResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,7 +44,7 @@ public class SearchChatRoomsFragment extends Fragment implements ChatRoomListAdp
 
     private UserAccount user;
 
-    private ArrayList<SearchChatRoomResults> searchChatRoomArrayList = new ArrayList<>();
+    private ArrayList<ChatRoomResults> searchChatRoomArrayList = new ArrayList<>();
 
 
     public SearchChatRoomsFragment() {
@@ -72,7 +72,7 @@ public class SearchChatRoomsFragment extends Fragment implements ChatRoomListAdp
         searchChatRoomET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                getSearchChatRoomBackend("");
             }
 
             @Override
@@ -83,7 +83,8 @@ public class SearchChatRoomsFragment extends Fragment implements ChatRoomListAdp
             @Override
             public void afterTextChanged(Editable editable) {
                 testTV.setText(editable.toString());
-                getSearchChatRoomBackend(editable.toString());
+                if(!editable.toString().matches(""))
+                    getSearchChatRoomBackend(editable.toString());
             }
         });
     }
@@ -102,40 +103,41 @@ public class SearchChatRoomsFragment extends Fragment implements ChatRoomListAdp
 
         map.put("chatName", name);
 
-        Call<ArrayList<SearchChatRoomResults>> call = retrofitInterface.executeSearchChatRoom(map);
 
-        call.enqueue(new Callback<ArrayList<SearchChatRoomResults>>() {
-            @Override
-            public void onResponse(Call<ArrayList<SearchChatRoomResults>> call, Response<ArrayList<SearchChatRoomResults>> response) {
+        if(!name.matches("")) {
+            Call<ArrayList<ChatRoomResults>> call = retrofitInterface.executeSearchChatRoom(map);
+            call.enqueue(new Callback<ArrayList<ChatRoomResults>>() {
+                @Override
+                public void onResponse(Call<ArrayList<ChatRoomResults>> call, Response<ArrayList<ChatRoomResults>> response) {
 
-                if (response.code() == 200){
+                    if (response.code() == 200) {
 
-                    searchChatsResult = new ArrayList<>();
-                    searchChatRoomArrayList = response.body();
-                    for ( int i = 0; i < searchChatRoomArrayList.size(); i++) {
-                        SearchChatRoomResults data = searchChatRoomArrayList.get(i);
-                        ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription());
-                        Log.i("chat found", data.getName());
-                        searchChatsResult.add(chatroom);
+                        searchChatsResult = new ArrayList<>();
+                        searchChatRoomArrayList = response.body();
+                        for (int i = 0; i < searchChatRoomArrayList.size(); i++) {
+                            ChatRoomResults data = searchChatRoomArrayList.get(i);
+                            ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription());
+                            Log.i("chat found", data.getName());
+                            searchChatsResult.add(chatroom);
 
+                        }
+                        chatListAdp = new ChatRoomListAdp(searchChatsResult);
+
+                        handleSearchChatRoom(searchChatsResult, chatListAdp);
+
+
+                    } else if (response.code() == 404) {
+                        Toast.makeText(getActivity(), "No chats error", Toast.LENGTH_LONG).show();
                     }
-                    chatListAdp = new ChatRoomListAdp(searchChatsResult);
 
-
-                    handleSearchChatRoom(searchChatsResult, chatListAdp);
-
-
-                } else if(response.code() == 404){
-                    Toast.makeText(getActivity(), "No chats error", Toast.LENGTH_LONG).show();
                 }
 
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<SearchChatRoomResults>> call, Throwable t) {
-                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<ArrayList<ChatRoomResults>> call, Throwable t) {
+                    Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     private void handleSearchChatRoom(ArrayList<ChatRoom> searchChatsResult, ChatRoomListAdp chatListAdp) {
@@ -157,11 +159,11 @@ public class SearchChatRoomsFragment extends Fragment implements ChatRoomListAdp
         map.put("chatName", chatroom);
         map.put("username", user.getUsername());
 
-        Call<SearchChatRoomResults> call = retrofitInterface.executeAddUserToRoom(map);
+        Call<ChatRoomResults> call = retrofitInterface.executeAddUserToRoom(map);
 
-        call.enqueue(new Callback<SearchChatRoomResults>() {
+        call.enqueue(new Callback<ChatRoomResults>() {
             @Override
-            public void onResponse(Call<SearchChatRoomResults> call, Response<SearchChatRoomResults> response) {
+            public void onResponse(Call<ChatRoomResults> call, Response<ChatRoomResults> response) {
 
                 if (response.code() == 200) {
                     String name = response.body().getName();
@@ -179,7 +181,7 @@ public class SearchChatRoomsFragment extends Fragment implements ChatRoomListAdp
             }
 
             @Override
-            public void onFailure(Call<SearchChatRoomResults> call, Throwable t) {
+            public void onFailure(Call<ChatRoomResults> call, Throwable t) {
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
@@ -189,5 +191,6 @@ public class SearchChatRoomsFragment extends Fragment implements ChatRoomListAdp
     public void onClick(View view, int position) {
         ChatRoom chat = searchChatsResult.get(position);
         addUserToChatRoom(chat.getName());
+
     }
 }
