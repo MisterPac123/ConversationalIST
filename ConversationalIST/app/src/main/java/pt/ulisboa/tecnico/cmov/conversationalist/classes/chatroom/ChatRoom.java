@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.conversationalist.classes.chatroom;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Objects;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.classes.Message;
@@ -12,6 +13,7 @@ public class ChatRoom implements Serializable {
     private ChatRoomTypes type;
     private String description;
     private ArrayList<Message> msgList;
+    private String inviteLink;
 
     /*public ChatRoom(String _name, String _type) {
         name = _name;
@@ -26,6 +28,8 @@ public class ChatRoom implements Serializable {
         name = _name;
         description = _description;
         msgList = new ArrayList<>();
+        inviteLink = "";
+
         if(_type.matches("Public"))
             type =  ChatRoomTypes.PUBLIC;
         else if(_type.matches("Private"))
@@ -71,6 +75,13 @@ public class ChatRoom implements Serializable {
         this.msgList.add(msg);
     }
 
+    public String getInviteLink() {
+        return inviteLink;
+    }
+
+    public void setInviteLink(String inviteLink) {
+        this.inviteLink = inviteLink;
+    }
     @Override
     public boolean equals(Object object) {
         if (this == object)

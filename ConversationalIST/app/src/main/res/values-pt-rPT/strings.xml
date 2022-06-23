@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ConversationalIST</string>
+    <string-array name="chatroom_types">
+        <item>Chat type…</item>
+        <item>Public</item>
+        <item>Private</item>
+        <item>Geo-founder</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Activity_Chat_Room -->
+    <string name="type_a_msg">Escreve uma mensagem</string>
+    <string name="inviteLink">Link de convite</string>
+
+    <!-- Activity_Login -->
+    <string name="login_btn">Entrar</string>
+    <string name="username_btn">Nome do utilizador</string>
+    <string name="password_btn">Palavra-Passe</string>
+    <string name="forgot_password_btn">Esqueceu Palavra-Passe?</string>
+    <string name="create_account_btn">Criar Conta</string>
+
+    <!-- Activity_SignUp -->
+    <string name="name_btn">Nome</string>
+    <string name="signup_btn">Registar</string>
+    <string name="username_btn2">Nome do utilizador</string>
+    <string name="password_btn2">Palavra-Passe</string>
+    <string name="email_btn">Endereço Electrónico</string>
+
+    <!-- ChatList_Row_Item -->
+    <string name="textView_btn">Text View</string>
+
+    <!-- Fragment_main -->
+    <string name="greeting_btn">Ola</string>
+    <string name="chats_btn">Conversas</string>
+    <string name="plus_btn">+</string>
+    <string name="search_btn">Procurar</string>
+    <string name="noChats_btn">Nenhuma conversa encontrada</string>
+
+    <!-- PopUp_newChat -->
+    <string name="chatName_btn">Nome da Conversa</string>
+    <string name="desc_btn">Descrição…</string>
+    <string name="create_btn">Criar</string>
+</resources>

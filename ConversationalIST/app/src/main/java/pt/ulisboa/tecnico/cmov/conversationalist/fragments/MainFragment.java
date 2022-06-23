@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmov.conversationalist.fragments;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.activities.ChatRoomActivity;
@@ -126,8 +130,8 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
 
 
 
-        ImageButton searchChatRoomBt = parentView.findViewById(R.id.searchChatRoomBtn);
-        EditText searchChatRoomEt = parentView.findViewById(R.id.searchChatRoomET);
+        ImageButton searchChatRoomBt = parentView.findViewById(R.id.searchChatRoomButton);
+        EditText searchChatRoomEt = parentView.findViewById(R.id.searchChatRoomEditText);
         searchChatRoomBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

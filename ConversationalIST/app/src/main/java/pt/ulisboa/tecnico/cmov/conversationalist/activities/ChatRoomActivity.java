@@ -1,13 +1,23 @@
 package pt.ulisboa.tecnico.cmov.conversationalist.activities;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -17,6 +27,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
 import pt.ulisboa.tecnico.cmov.conversationalist.adapters.ChatAdapter;
@@ -26,6 +38,7 @@ import pt.ulisboa.tecnico.cmov.conversationalist.classes.Message;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.RetrofitInterface;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.ArrayMsgsFromChatResult;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.ReceiveMsgFromChatResult;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.SearchChatRoomResults;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.SendMsgResult;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -63,12 +76,23 @@ public class ChatRoomActivity extends AppCompatActivity {
         if(intent != null) {
             //error
         }
+        initBackendConnection();
+
+        getCurrentIntentAndJoinPrivateChat();
+
         user = (UserAccount) intent.getSerializable("user");
         chat = (ChatRoom) intent.getSerializable("chat");
 
         initBackendConnection();
         //populatemsgArray();
         getMsgFromChat();
+
+        populatemsgArray();
+        configTitle(intent);
+        configSendButton();
+        configShareButton();
+        configInviteLinkButton();
+
 
         displayMsgs();
         verifyReadMsgs();
@@ -140,6 +164,48 @@ public class ChatRoomActivity extends AppCompatActivity {
         messagesArray.add(newMsg);
     }*/
 
+    private void getCurrentIntentAndJoinPrivateChat() {
+        Uri uri = getIntent().getData();
+        if(uri != null){
+            List<String> params = uri.getPathSegments();
+            String inviteLink = params.get(1);
+            Toast.makeText(ChatRoomActivity.this, "id="+inviteLink, Toast.LENGTH_SHORT).show();
+            AddUserToPrivateChatRoom(inviteLink);
+        }
+    }
+
+    private void AddUserToPrivateChatRoom(String inviteLink){
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put("user", user.getUsername());
+        map.put("inviteLink", inviteLink);
+
+        Call<SearchChatRoomResults> call = retrofitInterface.executeAddUserToPrivateChatRoom(map);
+
+        call.enqueue(new Callback<SearchChatRoomResults>() {
+            @Override
+            public void onResponse(Call<SearchChatRoomResults> call, Response<SearchChatRoomResults> response) {
+
+                if (response.code() == 200) {
+                    String name = response.body().getName();
+                    String type = response.body().getType();
+                    String description = response.body().getDescription();
+                    ChatRoom chatRoom = new ChatRoom(name, type, description);
+
+                    Log.i("add user to chatroom", chatRoom.getName());
+                    Toast.makeText(ChatRoomActivity.this, "Joined Private ChatRoom successfully", Toast.LENGTH_LONG).show();
+                } else if (response.code() == 400) {
+                    Toast.makeText(ChatRoomActivity.this, "Couldn't join ChatRoom", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchChatRoomResults> call, Throwable t) {
+                Toast.makeText(ChatRoomActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private void getMsgFromChat() {
         HashMap<String, String> map = new HashMap<>();
         map.put("chatName", chat.getName());
@@ -192,6 +258,46 @@ public class ChatRoomActivity extends AppCompatActivity {
     public void configTitle(Bundle intent) {
         TextView title = this.findViewById(R.id.textName);
         title.setText(chat.getName());
+    }
+
+    public void configInviteLinkButton() {
+        Button sendButton = this.findViewById(R.id.clipboard);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Invite Link", chat.getInviteLink());
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(ChatRoomActivity.this, "Copied to clipboard", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void configShareButton(){
+        ImageButton sendButton = this.findViewById(R.id.share_menu_btn);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText editTxtMsg = findViewById(R.id.editTxtTypemsg);
+                String msg = editTxtMsg.getText().toString();
+
+                if(msg.matches("")){
+                    //empty msg. dont send nothing
+                    CharSequence text = "Empty msg";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+                    toast.show();
+                    Log.i("no msg", "empty msg");
+                }
+                else{
+                    Intent myIntent = new Intent(Intent.ACTION_SEND);
+                    myIntent.setType("text/plain");
+                    myIntent.putExtra(Intent.EXTRA_TEXT, msg);
+                    startActivity(Intent.createChooser(myIntent, "Share using"));
+
+                }
+            }
+        });
     }
 
     public void configSendButton() {

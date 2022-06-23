@@ -7,6 +7,7 @@ public class ChatRoomResults {
     private String name;
     private String type;
     private String description;
+    private String inviteLink;
     private ArrayList<String> users;
 
 
@@ -31,4 +32,15 @@ public class ChatRoomResults {
     }
 
     public ArrayList<String> getReadUsers() {return users;}
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getInviteLink() {
+        return inviteLink;
+    }
+
+    public void setInviteLink(String inviteLink) {
+        this.inviteLink = inviteLink;
+    }
 }

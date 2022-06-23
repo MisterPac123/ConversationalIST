@@ -11,6 +11,7 @@ public class Message {
     private String date;
     private String time;
     private ArrayList<String> usersRead;
+    private String type;
 
     public Message (String _id, String _msg, String user, String _date, String _time, ArrayList<String> _usersRead) {
         id = _id;
@@ -19,8 +20,16 @@ public class Message {
         date = _date;
         time = _time;
         usersRead = _usersRead;
+        //type = _type;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public void setSender(String sender) {
         this.sender = sender;
