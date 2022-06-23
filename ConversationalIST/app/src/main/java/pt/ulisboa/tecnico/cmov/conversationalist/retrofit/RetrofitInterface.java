@@ -36,6 +36,9 @@ public interface RetrofitInterface {
     @POST("/chatRooms/addUserToChatRoom")
     Call<SearchChatRoomResults> executeAddUserToRoom(@Body HashMap<String, String> map);
 
+    @POST("/chatRooms/addUserToPrivateChatRoom")
+    Call<SearchChatRoomResults> executeAddUserToPrivateChatRoom(@Body HashMap<String, String> map);
+
     @POST("/chatRooms/sendMsgToChatRoom")
     Call<SendMsgResult> executeSendMsgToChatRoom(@Body HashMap<String, String> map);
 

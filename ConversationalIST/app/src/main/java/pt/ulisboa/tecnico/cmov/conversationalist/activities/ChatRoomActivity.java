@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
@@ -33,6 +34,7 @@ import pt.ulisboa.tecnico.cmov.conversationalist.classes.Message;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.RetrofitInterface;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.ArrayMsgsFromChatResult;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.ReceiveMsgFromChatResult;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.SearchChatRoomResults;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.SendMsgResult;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -70,32 +72,26 @@ public class ChatRoomActivity extends AppCompatActivity {
         if(intent != null) {
             //error
         }
+        initBackendConnection();
+
+        getCurrentIntentAndJoinPrivateChat();
+
         user = (UserAccount) intent.getSerializable("user");
         chat = (ChatRoom) intent.getSerializable("chat");
 
-        Log.i("name", chat.getName());
-        Log.i("description", chat.getDescription());
-        Log.i("inviteLink", chat.getInviteLink());
 
-        initBackendConnection();
         populatemsgArray();
+        configTitle(intent);
+        configSendButton();
+        configInviteLinkButton();
         getMsgFromUser();
 
         displayMsgs();
-
-        configTitle(intent);
-        configSendButton();
-
-        //getCurrentUser();
         start();
-        configInviteLinkButton();
+
     }
 
-    private void getCurrentUser() {
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        Uri data = intent.getData() ;
-    }
+
 
     public void initBackendConnection() {
         retrofit = new Retrofit.Builder()
@@ -118,10 +114,53 @@ public class ChatRoomActivity extends AppCompatActivity {
         messagesArray.add(newMsg);
     }
 
+    private void getCurrentIntentAndJoinPrivateChat() {
+        Uri uri = getIntent().getData();
+        if(uri != null){
+            List<String> params = uri.getPathSegments();
+            String inviteLink = params.get(1);
+            Toast.makeText(ChatRoomActivity.this, "id="+inviteLink, Toast.LENGTH_SHORT).show();
+            AddUserToPrivateChatRoom(inviteLink);
+        }
+    }
+
+    private void AddUserToPrivateChatRoom(String inviteLink){
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put("user", user.getUsername());
+        map.put("inviteLink", inviteLink);
+
+        Call<SearchChatRoomResults> call = retrofitInterface.executeAddUserToPrivateChatRoom(map);
+
+        call.enqueue(new Callback<SearchChatRoomResults>() {
+            @Override
+            public void onResponse(Call<SearchChatRoomResults> call, Response<SearchChatRoomResults> response) {
+
+                if (response.code() == 200) {
+                    String name = response.body().getName();
+                    String type = response.body().getType();
+                    String description = response.body().getDescription();
+                    ChatRoom chatRoom = new ChatRoom(name, type, description);
+
+                    Log.i("add user to chatroom", chatRoom.getName());
+                    Toast.makeText(ChatRoomActivity.this, "Joined Private ChatRoom successfully", Toast.LENGTH_LONG).show();
+                } else if (response.code() == 400) {
+                    Toast.makeText(ChatRoomActivity.this, "Couldn't join ChatRoom", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchChatRoomResults> call, Throwable t) {
+                Toast.makeText(ChatRoomActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private void getMsgFromUser() {
         HashMap<String, String> map = new HashMap<>();
-        map.put("chatName", chat.getName());
-
+        if(chat != null) {
+            map.put("chatName", chat.getName());
+        }
         Call<ArrayMsgsFromChatResult> call = retrofitInterface.executeReceiveMsgFromChatRoom(map);
 
         call.enqueue(new Callback<ArrayMsgsFromChatResult>() {
@@ -139,7 +178,7 @@ public class ChatRoomActivity extends AppCompatActivity {
 
                     }
                 } else if(response.code() == 404){
-                    //Toast.makeText(getActivity(), "No chats error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ChatRoomActivity.this, "No chats error", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -159,7 +198,9 @@ public class ChatRoomActivity extends AppCompatActivity {
 
     public void configTitle(Bundle intent) {
         TextView title = this.findViewById(R.id.textName);
-        title.setText(chat.getName());
+        if(chat != null){
+            title.setText(chat.getName());
+        }
     }
 
     public void configInviteLinkButton() {

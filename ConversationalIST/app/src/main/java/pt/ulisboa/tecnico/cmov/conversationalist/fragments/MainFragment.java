@@ -27,6 +27,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
@@ -83,7 +85,6 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
         configNewChatButton(view);
         configureSearchChat(view);
         getUserChatRooms(view);
-
 
         return view;
     }
