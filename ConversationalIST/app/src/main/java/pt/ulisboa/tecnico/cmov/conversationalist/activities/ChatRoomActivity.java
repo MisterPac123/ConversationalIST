@@ -11,6 +11,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.content.Intent;
@@ -62,6 +63,14 @@ public class ChatRoomActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ChatAdapter msgsAdapter;
 
+    SharedPreferences sharedPreferences;
+
+    private static String SHARED_PREF_NAME = "mypref";
+    private static String KEY_USERNAME = "username";
+    private static String KEY_EMAIL = "email";
+    private static String KEY_NAME = "name";
+    private static String KEY_LOGIN = "login";
+
     private Retrofit retrofit;
     private RetrofitInterface retrofitInterface;
     private String BASE_URL = "http://10.0.2.2:3000";
@@ -92,7 +101,6 @@ public class ChatRoomActivity extends AppCompatActivity {
         initBackendConnection();
 
         getCurrentIntentAndJoinPrivateChat();
-
 
         user = (UserAccount) intent.getSerializable("user");
         chat = (ChatRoom) intent.getSerializable("chat");

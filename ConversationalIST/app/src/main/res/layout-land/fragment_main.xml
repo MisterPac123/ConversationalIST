@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
-            android:text="Ahoy"
+            android:text="@string/greeting_btn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Chats"
+            android:text="@string/chats_btn"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="@+id/helloUser"
             app:layout_constraintTop_toBottomOf="@+id/helloUser" />
@@ -36,30 +36,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:text="+"
+            android:text="@string/plus_btn"
             app:layout_constraintBottom_toBottomOf="@+id/chatTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/chatTitle" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="376dp"
+            android:layout_height="48dp"
             android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="@+id/chatTitle"
             app:layout_constraintTop_toBottomOf="@+id/newChat">
 
             <EditText
-                android:id="@+id/searchChatRoomEditText"
-                android:layout_width="340dp"
-                android:layout_height="wrap_content"
+                android:id="@+id/searchChatRoomET"
+                android:layout_width="331dp"
+                android:layout_height="match_parent"
                 android:ems="10"
-                android:hint="Search"
+                android:hint="@string/search_btn"
                 android:inputType="textPersonName"
                 android:minHeight="48dp" />
 
             <ImageButton
-                android:id="@+id/searchChatRoomButton"
-                android:layout_width="358dp"
+                android:id="@+id/searchChatRoomBtn"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@android:drawable/ic_menu_search" />
@@ -74,15 +75,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
         <TextView
             android:id="@+id/EmptyChatListMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="60dp"
-            android:text="No chats found"
+            android:text="@string/noChats_btn"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
