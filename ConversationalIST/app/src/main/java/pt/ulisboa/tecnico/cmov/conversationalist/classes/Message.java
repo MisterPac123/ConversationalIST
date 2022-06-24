@@ -71,6 +71,10 @@ public class Message {
         return usersRead;
     }
 
+    public void addReader(String username) {
+        usersRead.add(username);
+    }
+
     public String getId() {
         return id;
     }
