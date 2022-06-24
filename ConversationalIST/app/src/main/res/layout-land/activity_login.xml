@@ -7,6 +7,16 @@
     android:background="@color/white"
     tools:context=".activities.LoginActivity">
 
+    <Button
+        android:id="@+id/noAccountBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_account_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.088"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/loginButton" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"

@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,7 +35,10 @@ public class LoginActivity extends AppCompatActivity {
     private RetrofitInterface retrofitInterface2;
     private String BASE_URL = "http://10.0.2.2:3000";
 
-    UserAccount user;
+    private UserAccount user;
+
+    private String noAccountUser = "";
+
 
     boolean nightMode = false;
 
@@ -52,7 +58,47 @@ public class LoginActivity extends AppCompatActivity {
         configSignupButton();
 
         configDarkModeButton();
+        configNoAccountButton();
 
+    }
+
+    private void configNoAccountButton() {
+        Button noAccountbtn = findViewById(R.id.noAccountBtn);
+        noAccountbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openDialog();
+            }
+        });
+    }
+
+    public void openDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Username");
+
+// Set up the input
+        final EditText input = new EditText(this);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+// Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                noAccountUser = input.getText().toString();
+                user = new UserAccount(noAccountUser, "", "Anon");
+                startMainActivity();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     public void configDarkModeButton(){

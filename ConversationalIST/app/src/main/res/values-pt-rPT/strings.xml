@@ -25,6 +25,8 @@
     <string name="password_btn">Palavra-Passe</string>
     <string name="forgot_password_btn">Esqueceu Palavra-Passe?</string>
     <string name="create_account_btn">Criar Conta</string>
+    <string name="no_account_btn">Começar sem conta</string>
+
 
     <!-- Activity_SignUp -->
     <string name="name_btn">Nome</string>

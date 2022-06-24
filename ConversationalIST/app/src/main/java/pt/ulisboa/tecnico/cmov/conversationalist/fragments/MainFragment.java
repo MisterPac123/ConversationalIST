@@ -193,7 +193,6 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
 
         RecyclerView chatsListView = view.findViewById(R.id.chatRoom_List);
 
-        Log.i("chats:", String.valueOf(availableChats.size()));
         chatsListView.setAdapter(chatListAdp);
         chatListAdp.setClickListener(this);
 
@@ -248,7 +247,6 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
                         ChatRoomResults data = userChatRoomArrayList.get(i);
                         ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription());
                         chatroom.setLastMsg(data.getLastMsgTime());
-                        //Log.i("date", data.getLastMsgTime());
                         addChatToArray(chatroom);
                     }
 
@@ -284,7 +282,6 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
                         ChatRoomResults data = userChatRoomArrayList.get(i);
                         ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription());
                         chatroom.setLastMsg(data.getLastMsgTime());
-                        //Log.i("date", data.getLastMsgTime());
                         addChatToArray(chatroom);
                     }
 
@@ -344,7 +341,6 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
     public void addChatToArray(ChatRoom chatRoom) {
         if(!availableChats.contains(chatRoom)){
             availableChats.add(chatRoom);
-            Log.i("new hat", chatRoom.getLastMsg().toString());
             Collections.sort(availableChats);
             Collections.reverse(availableChats);
         }
@@ -404,9 +400,7 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
 
                             ReceiveMsgFromChatResult msg = msgs.get(i);
                             ArrayList<String> users = msg.getUsersRead();
-                            Log.i("userRead", "dispList");
                             if(!users.contains(user.getUsername()) && !notificationsMsgs.contains(msg.getId())){
-                                Log.i("userRead", "create notification");
                                 createNotification(msg, chat.getName());
                                 chat.addUnreadMsgs(msg.getMsg());
                                 chatListAdp.notifyDataSetChanged();
