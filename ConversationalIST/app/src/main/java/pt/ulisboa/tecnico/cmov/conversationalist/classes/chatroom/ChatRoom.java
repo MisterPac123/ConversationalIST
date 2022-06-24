@@ -24,6 +24,20 @@ public class ChatRoom implements Serializable {
         else if(_type.matches("Geo-founder"))
             type =  ChatRoomTypes.GEOFOUNDER;
     }*/
+    public ChatRoom(String _name, String _type, String _description, String _inviteLink) {
+        name = _name;
+        description = _description;
+        msgList = new ArrayList<>();
+        inviteLink = _inviteLink;
+
+        if(_type.matches("Public"))
+            type =  ChatRoomTypes.PUBLIC;
+        else if(_type.matches("Private"))
+            type =  ChatRoomTypes.PRIVATE;
+        else if(_type.matches("Geo-fenced"))
+            type =  ChatRoomTypes.GEOFENCED;
+    }
+
     public ChatRoom(String _name, String _type, String _description) {
         name = _name;
         description = _description;
@@ -37,6 +51,8 @@ public class ChatRoom implements Serializable {
         else if(_type.matches("Geo-fenced"))
             type =  ChatRoomTypes.GEOFENCED;
     }
+
+
 
     public String getName() { return name; }
 

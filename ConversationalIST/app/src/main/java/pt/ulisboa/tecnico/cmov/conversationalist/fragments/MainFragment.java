@@ -209,7 +209,7 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
                     userChatRoomArrayList = response.body();
                     for ( int i = 0; i < userChatRoomArrayList.size(); i++) {
                         ChatRoomResults data = userChatRoomArrayList.get(i);
-                        ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription());
+                        ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription(), data.getInviteLink());
                         addChatToArray(chatroom);
                     }
 
