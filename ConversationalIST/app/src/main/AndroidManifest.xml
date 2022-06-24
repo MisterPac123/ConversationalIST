@@ -42,9 +42,7 @@
         <activity
             android:name=".activities.CreateChatRoomActivity"
             android:exported="false" />
-        <activity
-            android:name=".activities.ChatRoomActivity"
-            android:exported="false" />
+
         <activity
             android:name=".activities.SignupActivity"
             android:exported="false" />

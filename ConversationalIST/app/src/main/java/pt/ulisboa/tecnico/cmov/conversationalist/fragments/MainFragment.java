@@ -130,8 +130,8 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
 
 
 
-        ImageButton searchChatRoomBt = parentView.findViewById(R.id.searchChatRoomButton);
-        EditText searchChatRoomEt = parentView.findViewById(R.id.searchChatRoomEditText);
+        ImageButton searchChatRoomBt = parentView.findViewById(R.id.searchChatRoomBtn);
+        EditText searchChatRoomEt = parentView.findViewById(R.id.searchChatRoomET);
         searchChatRoomBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

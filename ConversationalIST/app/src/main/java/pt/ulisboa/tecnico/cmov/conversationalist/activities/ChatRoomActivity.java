@@ -38,7 +38,7 @@ import pt.ulisboa.tecnico.cmov.conversationalist.classes.Message;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.RetrofitInterface;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.ArrayMsgsFromChatResult;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.ReceiveMsgFromChatResult;
-import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.SearchChatRoomResults;
+import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.ChatRoomResults;
 import pt.ulisboa.tecnico.cmov.conversationalist.retrofit.results.SendMsgResult;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -87,7 +87,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         //populatemsgArray();
         getMsgFromChat();
 
-        populatemsgArray();
+        //populatemsgArray();
         configTitle(intent);
         configSendButton();
         configShareButton();
@@ -180,11 +180,11 @@ public class ChatRoomActivity extends AppCompatActivity {
         map.put("user", user.getUsername());
         map.put("inviteLink", inviteLink);
 
-        Call<SearchChatRoomResults> call = retrofitInterface.executeAddUserToPrivateChatRoom(map);
+        Call<ChatRoomResults> call = retrofitInterface.executeAddUserToPrivateChatRoom(map);
 
-        call.enqueue(new Callback<SearchChatRoomResults>() {
+        call.enqueue(new Callback<ChatRoomResults>() {
             @Override
-            public void onResponse(Call<SearchChatRoomResults> call, Response<SearchChatRoomResults> response) {
+            public void onResponse(Call<ChatRoomResults> call, Response<ChatRoomResults> response) {
 
                 if (response.code() == 200) {
                     String name = response.body().getName();
@@ -200,7 +200,7 @@ public class ChatRoomActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<SearchChatRoomResults> call, Throwable t) {
+            public void onFailure(Call<ChatRoomResults> call, Throwable t) {
                 Toast.makeText(ChatRoomActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
