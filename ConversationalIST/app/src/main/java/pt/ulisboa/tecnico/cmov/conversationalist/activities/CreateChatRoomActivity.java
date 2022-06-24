@@ -32,6 +32,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Random;
 
 import pt.ulisboa.tecnico.cmov.conversationalist.PermissionUtils;
 import pt.ulisboa.tecnico.cmov.conversationalist.R;
@@ -207,7 +208,25 @@ public class CreateChatRoomActivity extends AppCompatActivity {
             Log.i("createchat","no type found:" + chatroom_type);
     }
 
+    public static String getRandomString(int i){
+        final String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJOKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder result = new StringBuilder();
+        while (i > 0){
+            Random rand = new Random();
+            result.append(characters.charAt(rand.nextInt(characters.length())));
+            i--;
+        }
+
+        return result.toString();
+    }
+
+
+
+
     public void createNewPublicChatRoom(HashMap<String, String> map) {
+        String inviteLink = "http://www.conversationalist.com/gizmos/" + getRandomString(9);
+        map.put("inviteLink", inviteLink);
+
         Call<Void> call = retrofitInterface.executeCreateNewChat(map);
 
         call.enqueue(new Callback<Void>() {
