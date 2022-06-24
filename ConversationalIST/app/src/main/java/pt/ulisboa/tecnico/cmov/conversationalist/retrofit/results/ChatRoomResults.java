@@ -8,6 +8,7 @@ public class ChatRoomResults {
     private String type;
     private String description;
     private String inviteLink;
+    private String lastMsgTime;
     private ArrayList<String> users;
 
 
@@ -43,4 +44,6 @@ public class ChatRoomResults {
     public void setInviteLink(String inviteLink) {
         this.inviteLink = inviteLink;
     }
+
+    public String getLastMsgTime() {return lastMsgTime;}
 }

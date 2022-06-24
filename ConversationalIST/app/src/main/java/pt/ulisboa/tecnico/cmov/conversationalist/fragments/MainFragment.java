@@ -29,6 +29,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -61,6 +63,7 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
     private ArrayList<ChatRoom> availableChats = new ArrayList<>();
     private ArrayList<ChatRoomResults> userChatRoomArrayList = new ArrayList<>();
     private ArrayList<ChatRoomResults> searchChatRoomArrayList = new ArrayList<>();
+    private ArrayList<String> notificationsMsgs = new ArrayList<>();
 
 
     private Retrofit retrofit;
@@ -243,6 +246,8 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
                     for ( int i = 0; i < userChatRoomArrayList.size(); i++) {
                         ChatRoomResults data = userChatRoomArrayList.get(i);
                         ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription());
+                        chatroom.setLastMsg(data.getLastMsgTime());
+                        //Log.i("date", data.getLastMsgTime());
                         addChatToArray(chatroom);
                     }
 
@@ -297,8 +302,12 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
     }
 
     public void addChatToArray(ChatRoom chatRoom) {
-        if(!availableChats.contains(chatRoom))
+        if(!availableChats.contains(chatRoom)){
             availableChats.add(chatRoom);
+            Log.i("new hat", chatRoom.getLastMsg().toString());
+            Collections.sort(availableChats);
+            Collections.reverse(availableChats);
+        }
     }
 
 
@@ -356,9 +365,12 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
                             ReceiveMsgFromChatResult msg = msgs.get(i);
                             ArrayList<String> users = msg.getUsersRead();
                             Log.i("userRead", "dispList");
-                            if(!users.contains(user.getUsername())){
+                            if(!users.contains(user.getUsername()) && !notificationsMsgs.contains(msg.getId())){
                                 Log.i("userRead", "create notification");
                                 createNotification(msg, chat.getName());
+                                chat.addUnreadMsgs(msg.getMsg());
+                                chatListAdp.notifyDataSetChanged();
+
                             }
 
                         }
@@ -383,6 +395,8 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
 
         mNotificationManager.notify(0, notification_builder.build());*/
 
+
+        notificationsMsgs.add(msg.getId());
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(),"CHANNEL_ID");
         builder.setContentTitle("ConversationalIST");
         builder.setContentText(chatName + "\n" + msg.getSender() + ":" + msg.getMsg());

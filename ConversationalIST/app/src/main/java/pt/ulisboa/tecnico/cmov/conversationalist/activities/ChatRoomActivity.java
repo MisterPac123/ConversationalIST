@@ -107,6 +107,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         configSendButton();
         configShareButton();
         configInviteLinkButton();
+        configBackButton();
 
 
         displayMsgs();
@@ -115,6 +116,16 @@ public class ChatRoomActivity extends AppCompatActivity {
         configTitle(intent);
         configSendButton();
         start();
+    }
+
+    private void configBackButton() {
+        ImageButton back = findViewById(R.id.imageBack);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     private void verifyReadMsgs() {
