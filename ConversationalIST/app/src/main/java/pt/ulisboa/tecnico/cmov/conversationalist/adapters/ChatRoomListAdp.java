@@ -44,7 +44,12 @@ public class ChatRoomListAdp extends RecyclerView.Adapter<ChatRoomListAdp.ViewHo
         ViewHolderClass viewHolderClass = (ViewHolderClass) holder;
         ChatRoom chat = availableChatsList.get(position);
         viewHolderClass.titleView.setText(chat.getName());
-        viewHolderClass.subtitleView.setText(chat.getDescription());
+        if(chat.getNumberUnreadMsgs()>0){
+            viewHolderClass.subtitleView.setText(chat.getNumberUnreadMsgs() + " new msgs");
+        }
+        else {
+            viewHolderClass.subtitleView.setText(chat.getDescription());
+        }
     }
 
     @Override

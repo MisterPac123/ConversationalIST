@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="-32dp" />
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <ImageButton
         android:id="@+id/imageBack"
         android:layout_width="@dimen/_30sdp"
         android:layout_height="@dimen/_30sdp"

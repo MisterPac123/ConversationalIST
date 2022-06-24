@@ -55,9 +55,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ChatRoomActivity extends AppCompatActivity {
 
     private UserAccount user;
-    private Calendar calendar;
-    private SimpleDateFormat dateFormat;
-    private SimpleDateFormat timeFormat;
     private ArrayList<Message> messagesArray = new ArrayList<>();
     private ChatRoom chat;
     private RecyclerView recyclerView;
@@ -108,6 +105,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         configSendButton();
         configShareButton();
         configInviteLinkButton();
+        configBackButton();
 
 
         displayMsgs();
@@ -119,11 +117,21 @@ public class ChatRoomActivity extends AppCompatActivity {
         start();
     }
 
+    private void configBackButton() {
+        ImageButton back = findViewById(R.id.imageBack);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+    }
+
     private void verifyReadMsgs() {
         Log.i("userRead", "verify read msgs");
         for(int i=0; i < messagesArray.size(); i++){
             Message m = messagesArray.get(i);
-            if(m.getUsersRead().contains(user.getUsername())){
+            if(!m.getUsersRead().contains(user.getUsername())){
                 readMsg(m.getId());
             }
         }
@@ -135,6 +143,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         map.put("chatName", chat.getName());
         map.put("msgId", id);
         map.put("chatType", chat.getStringType());
+        map.put("username", user.getUsername());
 
         Call<Void> call = retrofitInterface.executeReadMsg(map);
 
@@ -143,7 +152,7 @@ public class ChatRoomActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.code() == 200) {
                     Log.i("chatroom read msg", "msg read");
-
+                    addUserToReadMsg(id, user.getUsername());
                 }
             }
 
@@ -152,6 +161,15 @@ public class ChatRoomActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void addUserToReadMsg(String id, String username) {
+        for(int i=0; i<messagesArray.size(); i++){
+            Message msg = messagesArray.get(i);
+            if(msg.getId() == id){
+                msg.addReader(username);
+            }
+        }
     }
 
     @Override
