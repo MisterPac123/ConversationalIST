@@ -48,7 +48,8 @@
             android:exported="false" />
         <activity
             android:name=".activities.MainActivity"
-            android:exported="false" />
+            android:exported="false">
+        </activity>
         <activity
             android:name=".activities.LoginActivity"
             android:exported="true">
@@ -80,6 +81,11 @@
                 <!-- Accepts URIs that begin with "conversationalist://gizmos” -->
                 <data android:scheme="conversationalist"
                     android:host="gizmos" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <data android:mimeType="text/plain"/>
             </intent-filter>
 
         </activity>

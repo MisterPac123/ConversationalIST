@@ -83,13 +83,6 @@ public class ChatRoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
 
-        Uri uri = getIntent().getData();
-        if (uri != null) {
-            List<String> params = uri.getPathSegments();
-            String id = params.get(params.size()-1);
-            Toast.makeText(this, "id" + id, Toast.LENGTH_SHORT).show();
-        }
-
         recyclerView = this.findViewById(R.id.chatRecyclerView);
         if(recyclerView == null) {
             Log.i("chatRoom", "null recycleviw");
@@ -98,6 +91,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         if(intent != null) {
             //error
         }
+
         initBackendConnection();
 
         getCurrentIntentAndJoinPrivateChat();
@@ -121,6 +115,7 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         configTitle(intent);
         configSendButton();
+        configReceiveShare();
         start();
     }
 
@@ -293,6 +288,20 @@ public class ChatRoomActivity extends AppCompatActivity {
                 Toast.makeText(ChatRoomActivity.this, "Copied to clipboard", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    public void configReceiveShare(){
+        Intent i = getIntent();
+        String action = i.getAction();
+        String type = i.getType();
+        if(Intent.ACTION_SEND.equals(action) && type != null){
+
+            if("text/plain".equals(type)){
+                String getMessage = i.getStringExtra(Intent.EXTRA_TEXT);
+                EditText editTxtMsg = findViewById(R.id.editTxtTypemsg);
+                editTxtMsg.setText(getMessage);
+            }
+        }
     }
 
     public void configShareButton(){

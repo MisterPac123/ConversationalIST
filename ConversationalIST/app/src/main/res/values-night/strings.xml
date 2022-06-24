@@ -4,8 +4,59 @@
         <item>Chat type…</item>
         <item>Public</item>
         <item>Private</item>
-        <item>Geo-founder</item>
+        <item>Geo-fenced</item>
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="location_permission_denied">Location permission denied</string>
+    <string name="permission_required_toast">permition required</string>
+    <string name="permission_rationale_location">permission rationale location</string>
+    <string name="title_activity_maps">MapsActivity</string>
+
+    <!-- Activity_Chat_Room -->
+    <string name="type_a_msg">Type a message</string>
+    <string name="inviteLink">Invite Link</string>
+
+    <!-- Activity_Login -->
+    <string name="login_btn">Login</string>
+    <string name="username_btn">Username</string>
+    <string name="password_btn">Password</string>
+    <string name="forgot_password_btn">Forgot Password?</string>
+    <string name="create_account_btn">Create Account</string>
+
+    <!-- Activity_SignUp -->
+    <string name="name_btn">Name</string>
+    <string name="signup_btn">SignUp</string>
+    <string name="username_btn2">Username</string>
+    <string name="password_btn2">Password</string>
+    <string name="email_btn">Email</string>
+
+    <!-- ChatList_Row_Item -->
+    <string name="textView_btn">Text View</string>
+
+    <!-- Fragment_main -->
+    <string name="greeting_btn">Hi</string>
+    <string name="chats_btn">Chats</string>
+    <string name="plus_btn">+</string>
+    <string name="search_btn">Search</string>
+    <string name="noChats_btn">No chats found</string>
+
+    <!-- PopUp_newChat -->
+    <string name="chatName_btn">Chat Name</string>
+    <string name="desc_btn">Description…</string>
+    <string name="create_btn">Create</string>
+
+    <!-- Activity_create_chat_room -->
+    <string name="pickLocation_btn">Pick Location</string>
+    <string name="location_btn">Location:</string>
+    <string name="radius_btn">Radius (m)</string>
+
+    <!-- Activity_maps -->
+    <string name="addLocation_btn">Add Location</string>
+
+    <!-- Fragment_profile -->
+    <string name="username3_btn">Username:</string>
+    <string name="logout_btn">Logout</string>
+
 </resources>

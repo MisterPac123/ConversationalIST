@@ -8,6 +8,7 @@
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="location_permission_denied">Location permission denied</string>
     <string name="permission_required_toast">permition required</string>
     <string name="permission_rationale_location">permission rationale location</string>
@@ -45,5 +46,17 @@
     <string name="chatName_btn">Chat Name</string>
     <string name="desc_btn">Description…</string>
     <string name="create_btn">Create</string>
+
+    <!-- Activity_create_chat_room -->
+    <string name="pickLocation_btn">Pick Location</string>
+    <string name="location_btn">Location:</string>
+    <string name="radius_btn">Radius (m)</string>
+
+    <!-- Activity_maps -->
+    <string name="addLocation_btn">Add Location</string>
+
+    <!-- Fragment_profile -->
+    <string name="username3_btn">Username:</string>
+    <string name="logout_btn">Logout</string>
 
 </resources>
