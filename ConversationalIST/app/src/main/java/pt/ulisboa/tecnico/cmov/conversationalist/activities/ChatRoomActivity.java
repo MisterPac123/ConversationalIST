@@ -13,6 +13,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,10 +25,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.List;
 import java.util.Random;
 
@@ -68,6 +73,14 @@ public class ChatRoomActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
+
+        Uri uri = getIntent().getData();
+        if (uri != null) {
+            List<String> params = uri.getPathSegments();
+            String id = params.get(params.size()-1);
+            Toast.makeText(this, "id" + id, Toast.LENGTH_SHORT).show();
+        }
+
         recyclerView = this.findViewById(R.id.chatRecyclerView);
         if(recyclerView == null) {
             Log.i("chatRoom", "null recycleviw");
@@ -79,6 +92,11 @@ public class ChatRoomActivity extends AppCompatActivity {
         initBackendConnection();
 
         getCurrentIntentAndJoinPrivateChat();
+
+
+        Intent intent2 = getIntent();
+        String action = intent2.getAction();
+        Uri data = intent2.getData();
 
         user = (UserAccount) intent.getSerializable("user");
         chat = (ChatRoom) intent.getSerializable("chat");

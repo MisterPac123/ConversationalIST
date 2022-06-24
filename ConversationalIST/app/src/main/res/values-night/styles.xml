@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="Widget.Theme.ConversationalIST.MyView" parent="">
+    <style name="Widget.Theme.ConversationalIST.MyView" parent="Theme.AppCompat.DayNight">
         <item name="android:background">@color/gray_600</item>
         <item name="exampleColor">@color/light_blue_600</item>
     </style>

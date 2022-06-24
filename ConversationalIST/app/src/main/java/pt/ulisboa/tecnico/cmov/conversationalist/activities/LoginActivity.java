@@ -1,7 +1,9 @@
 package pt.ulisboa.tecnico.cmov.conversationalist.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -30,6 +32,8 @@ public class LoginActivity extends AppCompatActivity {
 
     UserAccount user;
 
+    boolean nightMode = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +49,31 @@ public class LoginActivity extends AppCompatActivity {
         configLoginButton();
         configSignupButton();
 
+        configDarkModeButton();
+
     }
+
+    public void configDarkModeButton(){
+
+        Button switch_btn = (Button) findViewById(R.id.darkModeButton);
+
+        switch_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!nightMode) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    switch_btn.setText("Disable Dark Mode");
+                    nightMode = true;
+                } else {
+                    switch_btn.setText("Enable Dark Mode");
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    nightMode = false;
+                }
+            }
+        });
+
+    }
+
     private void configLoginButton(){
 
         Button loginBtn = findViewById(R.id.loginButton);
