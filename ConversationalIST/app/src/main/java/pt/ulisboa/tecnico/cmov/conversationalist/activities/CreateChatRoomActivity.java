@@ -204,6 +204,8 @@ public class CreateChatRoomActivity extends AppCompatActivity {
             createNewPublicChatRoom(map);
         else if(chatroom_type.matches("Geo-fenced"))
             createNewGeoChatRoom(map);
+        else if(chatroom_type.matches("Private"))
+            createNewPrivateChatRoom(map);
         else
             Log.i("createchat","no type found:" + chatroom_type);
     }
@@ -228,6 +230,31 @@ public class CreateChatRoomActivity extends AppCompatActivity {
         map.put("inviteLink", inviteLink);
 
         Call<Void> call = retrofitInterface.executeCreateNewChat(map);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                if (response.code() == 200) {
+                    Toast.makeText(getApplicationContext(), "ChatRoom added successfully", Toast.LENGTH_LONG).show();
+                    finish();
+                } else if (response.code() == 400) {
+                    Toast.makeText(getApplicationContext(), "Name already exists", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void createNewPrivateChatRoom(HashMap<String, String> map) {
+        String inviteLink = "http://www.conversationalist.com/gizmos/" + getRandomString(9);
+        map.put("inviteLink", inviteLink);
+
+        Call<Void> call = retrofitInterface.executeCreateNewPrivateChat(map);
 
         call.enqueue(new Callback<Void>() {
             @Override

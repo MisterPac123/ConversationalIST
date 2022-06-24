@@ -230,6 +230,7 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
 
         getUserPublicChatRooms(map);
         //getUserGeoChatRooms(map);
+        getUserPrivateChatRooms(map);
 
     }
 
@@ -267,6 +268,45 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
             }
         });
     }
+
+
+    public void getUserPrivateChatRooms(HashMap<String, String> map) {
+        Call<ArrayList<ChatRoomResults>> call = retrofitInterface.executeGetUserPrivateChatRoom(map);
+
+        call.enqueue(new Callback<ArrayList<ChatRoomResults>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ChatRoomResults>> call, Response<ArrayList<ChatRoomResults>> response) {
+
+                if (response.code() == 200){
+
+                    userChatRoomArrayList = response.body();
+                    for ( int i = 0; i < userChatRoomArrayList.size(); i++) {
+                        ChatRoomResults data = userChatRoomArrayList.get(i);
+                        ChatRoom chatroom = new ChatRoom(data.getName(), data.getType(), data.getDescription());
+                        chatroom.setLastMsg(data.getLastMsgTime());
+                        //Log.i("date", data.getLastMsgTime());
+                        addChatToArray(chatroom);
+                    }
+
+                    chatListAdp = new ChatRoomListAdp(availableChats);
+
+                    displayChatList(view, chatListAdp);
+
+                } else if(response.code() == 404){
+                    Toast.makeText(getActivity(), "No chats error", Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ChatRoomResults>> call, Throwable t) {
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
+
 
     public void getUserGeoChatRooms(HashMap<String, String> map) {
         Call<ArrayList<ChatRoomResults>> call = retrofitInterface.executeGetUserGeoChatRoom(map);
@@ -370,9 +410,7 @@ public class MainFragment extends Fragment implements ChatRoomListAdp.ItemClickL
                                 createNotification(msg, chat.getName());
                                 chat.addUnreadMsgs(msg.getMsg());
                                 chatListAdp.notifyDataSetChanged();
-
                             }
-
                         }
                     }
                     else
