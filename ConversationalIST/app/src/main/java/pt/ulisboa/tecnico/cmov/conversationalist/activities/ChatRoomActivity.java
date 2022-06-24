@@ -54,9 +54,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ChatRoomActivity extends AppCompatActivity {
 
     private UserAccount user;
-    private Calendar calendar;
-    private SimpleDateFormat dateFormat;
-    private SimpleDateFormat timeFormat;
     private ArrayList<Message> messagesArray = new ArrayList<>();
     private ChatRoom chat;
     private RecyclerView recyclerView;
