@@ -3,14 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Diogo/Downloads/ConversationalIST/ConversationalIST/app/src/main/res/drawable/backgound_content_top.xml" value="0.1" />
-        <entry key="..\:/Users/Diogo/Downloads/ConversationalIST/ConversationalIST/app/src/main/res/drawable/switch_btn_bg.xml" value="0.1" />
         <entry key="..\:/Users/Diogo/Downloads/ConversationalIST/ConversationalIST/app/src/main/res/layout/activity_chat_room.xml" value="0.1524822695035461" />
-        <entry key="..\:/Users/Diogo/Downloads/ConversationalIST/ConversationalIST/app/src/main/res/layout/activity_login.xml" value="0.33" />
-        <entry key="..\:/Users/Diogo/Downloads/ConversationalIST/ConversationalIST/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/Diogo/Downloads/ConversationalIST/ConversationalIST/app/src/main/res/layout/activity_login.xml" value="0.1524822695035461" />
+        <entry key="..\:/Users/Diogo/Downloads/ConversationalIST/ConversationalIST/app/src/main/res/layout/activity_main.xml" value="0.1524822695035461" />
         <entry key="..\:/Users/Diogo/Downloads/ConversationalIST/ConversationalIST/app/src/main/res/layout/activity_signup.xml" value="0.1524822695035461" />
-        <entry key="..\:/Users/Diogo/Downloads/ConversationalIST/ConversationalIST/app/src/main/res/layout/chatlist_row_item.xml" value="0.358695652173913" />
-        <entry key="..\:/Users/Diogo/Downloads/ConversationalIST/ConversationalIST/app/src/main/res/layout/fragment_main.xml" value="0.33" />
         <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/Nova pasta/ConversationalIST/app/src/main/res/layout-w1240dp/activity_login2.xml" value="0.109375" />
         <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/Nova pasta/ConversationalIST/app/src/main/res/layout-w936dp/activity_login2.xml" value="0.1" />
         <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/Nova pasta/ConversationalIST/app/src/main/res/layout/activity_login.xml" value="0.22826086956521738" />
@@ -33,6 +29,9 @@
         <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/drawable/ic_searchchatroom_background.xml" value="0.1485" />
         <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/drawable/ic_searchchatroom_foreground.xml" value="0.1" />
         <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/drawable/search_chatroom.xml" value="0.154" />
+        <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/layout-land/activity_chat_room.xml" value="0.10008818342151675" />
+        <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/layout-land/activity_main.xml" value="0.10008818342151675" />
+        <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/layout-land/activity_signup.xml" value="0.10008818342151675" />
         <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/layout/activity_chat_room.xml" value="0.2" />
         <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/layout/activity_create_chat_room.xml" value="0.25" />
         <entry key="..\:/Users/pak97/Desktop/Meic/cmu2/proj/ConversationalIST/app/src/main/res/layout/activity_main.xml" value="0.16077898550724637" />
