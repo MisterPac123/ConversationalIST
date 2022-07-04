@@ -248,6 +248,8 @@ public class CreateChatRoomActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+
+        Log.i("inviteLink", inviteLink);
     }
 
     public void createNewPrivateChatRoom(HashMap<String, String> map) {

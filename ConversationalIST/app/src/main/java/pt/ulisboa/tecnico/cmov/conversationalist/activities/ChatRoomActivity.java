@@ -225,8 +225,7 @@ public class ChatRoomActivity extends AppCompatActivity {
                     String name = response.body().getName();
                     String type = response.body().getType();
                     String description = response.body().getDescription();
-                    ChatRoom chatRoom = new ChatRoom(name, type, description);
-                    chatRoom.setInviteLink(inviteLink);
+                    ChatRoom chatRoom = new ChatRoom(name, type, description, inviteLink);
 
                     Log.i("add user to chatroom", chatRoom.getName());
                     Toast.makeText(ChatRoomActivity.this, "Joined Private ChatRoom successfully", Toast.LENGTH_LONG).show();
